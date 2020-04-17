@@ -18,8 +18,6 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     // Defines
