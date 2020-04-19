@@ -11,15 +11,11 @@
         android:id="@+id/WebView"
         android:layout_width="398dp"
         android:layout_height="555dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@+id/button">
 
     </WebView>
 
@@ -27,16 +23,14 @@
         android:id="@+id/editText"
         android:layout_width="201dp"
         android:layout_height="45dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="Give webpage"
         android:inputType="textPersonName"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/WebView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.032"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.105"
         tools:visibility="visible" />
 
     <ImageButton
@@ -44,12 +38,8 @@
         android:layout_width="48dp"
         android:layout_height="45dp"
         android:onClick="refreshPage"
-        app:layout_constraintBottom_toTopOf="@+id/WebView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButton2"
         app:layout_constraintStart_toEndOf="@+id/imageButton2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.106"
         app:srcCompat="@android:drawable/stat_notify_sync" />
 
     <ImageButton
@@ -57,36 +47,28 @@
         android:layout_width="48dp"
         android:layout_height="45dp"
         android:onClick="goPage"
-        app:layout_constraintBottom_toTopOf="@+id/WebView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="@+id/editText"
         app:layout_constraintStart_toEndOf="@+id/editText"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.106"
         app:srcCompat="@android:drawable/ic_menu_search" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
         android:onClick="initialize"
         android:text="Initialize"
-        app:layout_constraintBottom_toTopOf="@+id/WebView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.775"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
-        app:layout_constraintVertical_bias="0.52" />
+        app:layout_constraintBottom_toBottomOf="@+id/button"
+        app:layout_constraintStart_toEndOf="@+id/button" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="12dp"
         android:onClick="shoutOut"
         android:text="shoutOut"
-        app:layout_constraintBottom_toTopOf="@+id/WebView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.153"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
 
@@ -95,12 +77,8 @@
         android:layout_width="51dp"
         android:layout_height="45dp"
         android:onClick="lastPage"
-        app:layout_constraintBottom_toTopOf="@+id/WebView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
         app:layout_constraintStart_toEndOf="@+id/imageButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.107"
         app:srcCompat="?attr/actionModeCloseDrawable" />
 
     <ImageButton
@@ -108,12 +86,8 @@
         android:layout_width="49dp"
         android:layout_height="45dp"
         android:onClick="nextPage"
-        app:layout_constraintBottom_toTopOf="@+id/WebView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButton3"
         app:layout_constraintStart_toEndOf="@+id/imageButton3"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.107"
         app:srcCompat="@android:drawable/ic_menu_send" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
