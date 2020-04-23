@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Settings">
+        <menu>
+            <item android:id="@+id/setting_font"
+                android:title="Font"/>
+            <item android:id="@+id/setting_width"
+                android:title="Width"/>
+            <item android:id="@+id/setting_height"
+                android:title="Height"/>
+            <item android:id="@+id/setting_bold"
+                android:title="Bold"/>
+            <item android:id="@+id/setting_italic"
+                android:title="Italic"/>
+        </menu>
+    </item>
+
+</menu>
