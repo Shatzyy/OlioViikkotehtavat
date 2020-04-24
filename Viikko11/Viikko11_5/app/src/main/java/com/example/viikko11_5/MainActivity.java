@@ -27,9 +27,8 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawer;
-    private TextView text, font, width, height, user;
-    private EditText edit, display;
-    private ArrayAdapter<String> adapter = null;
+    private TextView text, font, width, height;
+    private EditText edit;
     private Spinner spin;
 
     @Override
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
 
         // Setting navigation view & menu items for listeners
-        NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
+        NavigationView nav = findViewById(R.id.nav_view);
         MenuItem boldCheck = nav.getMenu().findItem(R.id.setting_bold);
         MenuItem italicCheck = nav.getMenu().findItem(R.id.setting_italic);
         MenuItem editCheck = nav.getMenu().findItem(R.id.setting_edit);
@@ -63,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Setting spinner
         spin = (Spinner) nav.getMenu().findItem(R.id.setting_language).getActionView();
-        String spinnerList[] = {"en", "fi", "sv"};
-        adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, spinnerList);
+        String[] spinnerList = {"en", "fi", "sv"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, spinnerList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(adapter);
 
@@ -134,8 +133,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateUser(View v) {
-        user = findViewById(R.id.userView);
-        display = findViewById(R.id.user_setting_display);
+        TextView user = findViewById(R.id.userView);
+        EditText display = findViewById(R.id.user_setting_display);
         user.setText(display.getText());
     }
 
