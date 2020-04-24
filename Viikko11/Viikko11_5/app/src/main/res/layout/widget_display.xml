@@ -1,0 +1,26 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="horizontal"
+    >
+
+    <EditText
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:text="AdminUser"
+        android:id="@+id/user_setting_display" />
+
+    <Button
+        android:id="@+id/btn_usr"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:onClick="updateUser"
+        android:padding="0dp"
+        android:text="✔"/>
+
+</LinearLayout>

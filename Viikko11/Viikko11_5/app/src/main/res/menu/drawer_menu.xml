@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="@string/Settings">
+        <menu>
+            <item android:id="@+id/setting_display"
+                app:actionLayout="@layout/widget_display"
+                android:title="@string/Username"/>
+            <item android:id="@+id/setting_language"
+                app:actionLayout="@layout/widget_language"
+                android:title="@string/Language" />
+            <item android:id="@+id/setting_language_btn"
+                app:actionLayout="@/layout/widget_btn"
+                android:title="@string/Confirm"/>
+            <item android:id="@+id/setting_font"
+                app:actionLayout="@layout/widget_font"
+                android:title="@string/Font"/>
+            <item android:id="@+id/setting_width"
+                app:actionLayout="@layout/widget_width"
+                android:title="@string/Width"/>
+            <item android:id="@+id/setting_height"
+                app:actionLayout="@layout/widget_height"
+                android:title="@string/Height"/>
+            <item android:id="@+id/setting_bold"
+                app:actionLayout="@layout/widget_bold"
+                android:title="@string/Bold"/>
+            <item android:id="@+id/setting_italic"
+                app:actionLayout="@layout/widget_italic"
+                android:title="@string/Italic"/>
+            <item android:id="@+id/setting_edit"
+                app:actionLayout="@layout/widget_edit"
+                android:title="@string/Allow_editing"/>
+        </menu>
+    </item>
+
+</menu>

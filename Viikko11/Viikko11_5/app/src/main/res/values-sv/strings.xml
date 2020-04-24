@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Viikko11_5</string>
+
+    <string name="Settings">Inställningar</string>
+    <string name="Username">Användarnamn</string>
+    <string name="Language">Språk</string>
+    <string name="Font">Font</string>
+    <string name="Width">Bredd</string>
+    <string name="Height">Vara</string>
+    <string name="Bold">Båld</string>
+    <string name="Italic">Kursiv</string>
+    <string name="Allow_editing">Tillåt redigering</string>
+    <string name="Confirm">Acceptera språket</string>
+
+    <string name="Insert">Sätt in något här</string>
+    <string name="Text">Detta är en testtext. Denna TextView kan redigeras från inställningarna som finns i sidofältet.</string>
+
+    <string name="navigation_drawer_open">Öppen sidofält</string>
+    <string name="navigation_drawer_close">Stäng sidofältet</string>
+</resources>

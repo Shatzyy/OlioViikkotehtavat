@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Viikko11_5</string>
+
+    <string name="Settings">Asetukset</string>
+    <string name="Username">Käyttäjänimi</string>
+    <string name="Language">Kieli</string>
+    <string name="Font">Fontti</string>
+    <string name="Width">Leveys</string>
+    <string name="Height">Korkeus</string>
+    <string name="Bold">Lihavoitu</string>
+    <string name="Italic">Kursivoitu</string>
+    <string name="Allow_editing">Salli editointi</string>
+    <string name="Confirm">Hyväksy kieli</string>
+
+    <string name="Insert">Lisää jotain tänne</string>
+    <string name="Text">Tämä on testi teksti. Tätä tekstikenttää voidaan muokata asetuksista, jotka löytyvät sivupalkista.</string>
+
+    <string name="navigation_drawer_open">Avaa sivupalkki</string>
+    <string name="navigation_drawer_close">Sulje sivupalkki</string>
+
+</resources>
