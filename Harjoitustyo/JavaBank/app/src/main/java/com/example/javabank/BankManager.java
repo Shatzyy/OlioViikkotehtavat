@@ -1,8 +1,13 @@
 package com.example.javabank;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 // Class for managing all Bank activities
 public class BankManager {
-    private static BankManager bm = new BankManager();
+    // Single instance of BankManager allowed
+    private static final BankManager bm = new BankManager();
+    // Initialize Database connection
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public BankManager () {
 
@@ -15,11 +20,11 @@ public class BankManager {
 
 
     // Methods for managing accounts
-    public void createAccount() {
+    public void createAccount(String acc, long b) {
         //TODO account managing
     }
 
-    public void deleteAccount() {
+    public void deleteAccount(String acc) {
         //TODO account managing
     }
 

@@ -13,4 +13,22 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="account_title">Your Accounts:</string>
+    <string name="account_type">Account</string>
+    <string name="account_nr">AccountNumber</string>
+    <string name="account_balance">Balance</string>
+    <string name="account_image">Account image</string>
+    <string name="account_create_title">Create new account</string>
+    <string name="account_add_credit">Add credit limit?</string>
+    <string name="account_creditLimit">Credit limit</string>
+    <string name="account_show">Show account</string>
+
+    <string name="button_accept">Accept ✔</string>
+    <string name="button_cancel">Cancel ✘</string>
+    <string name="button_delete">Delete</string>
+
+    <string name="account_delete_title">Delete account</string>
+    <string name="account_update_title">Update account</string>
+    <string name="linkCardTitle">Linked BankCard:</string>
+
 </resources>

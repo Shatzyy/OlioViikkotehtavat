@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/accImageView"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_money"
+                android:contentDescription="@string/account_image" />
+
+            <TextView
+                android:id="@+id/accTypeView"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/account_type"
+                android:layout_toEndOf="@+id/accImageView"
+                android:layout_alignParentTop="true"
+                android:gravity="center|start"
+                android:textSize="20sp"
+                android:textColor="#000000"/>
+
+            <TextView
+                android:id="@+id/accNrView"
+                android:layout_width="180dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_toEndOf="@+id/accImageView"
+                android:layout_below="@+id/accTypeView"
+                android:text="@string/account_nr"
+                android:textSize="16sp"
+                android:textColor="#636363"/>
+
+
+            <TextView
+                android:id="@+id/accBalanceView"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:layout_toStartOf="@+id/viewAccount"
+                android:gravity="center_vertical|end"
+                android:text="@string/account_balance"
+                android:textSize="16sp"
+                android:textColor="#636363"/>
+
+            <ImageView
+                android:id="@+id/viewAccount"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_next"
+                android:contentDescription="@string/account_show"/>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
