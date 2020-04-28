@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1067450430677",
+    "firebase_url": "https://javabank-harkkatyo.firebaseio.com",
+    "project_id": "javabank-harkkatyo",
+    "storage_bucket": "javabank-harkkatyo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067450430677:android:29a5a6a4d9da3068001e5c",
+        "android_client_info": {
+          "package_name": "com.example.javabank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1067450430677-0tjhuq6klh6kt2g1dnomo1fkdgo1va4o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfASv5jcMA6l5YcmAeK2BbN8dkN25Ji9M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1067450430677-0tjhuq6klh6kt2g1dnomo1fkdgo1va4o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
