@@ -1,7 +1,5 @@
 package com.example.javabank;
 
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,7 +21,7 @@ public class BankManager {
     private static final BankManager bm = new BankManager();
     // Initialize Database connection
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String userRef = "12312321312"; //TODO get from database
+    private String userRef = "";
     public BankManager () {
 
     }
@@ -202,5 +200,9 @@ public class BankManager {
 
     public ArrayList<Account> getAccounts() {
         return null;
+    }
+
+    public void setUserRef(String s) {
+        this.userRef = s;
     }
 }

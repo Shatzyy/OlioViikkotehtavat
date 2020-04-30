@@ -42,6 +42,7 @@ public class Register extends AppCompatActivity {
                 db.collection("users").document(user.getText().toString()).set(tmp).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(Register.this, "Account created! Please login.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Register.this, Login.class);
                         startActivity(intent);
                     }

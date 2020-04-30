@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -35,6 +36,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        // Set userRef in BankManager
+        String userRef = getIntent().getStringExtra("userRef");
+        bm.setUserRef(userRef);
 
         // Show main fragment after creating MainActivity
         if (savedInstanceState == null) {
@@ -84,7 +89,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 break;
 
             case R.id.nav_logout:
-                // TODO Return to login page + logout
+                Intent intent = new Intent(MainActivity.this, Login.class);
+                bm.setUserRef("");
+                Toast.makeText(this, "Logged out!", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
                 break;
         }
 

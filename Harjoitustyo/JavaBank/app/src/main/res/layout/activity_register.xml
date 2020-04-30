@@ -41,8 +41,8 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/RegisterTitle"
-            android:autofillHints="@string/register_email"
-            android:hint="@string/register_email"
+            android:autofillHints="@string/register_username"
+            android:hint="@string/register_username"
             android:inputType="text" />
 
         <EditText
@@ -90,11 +90,10 @@
 
     <TextView
         android:id="@+id/passwordTips"
-        android:layout_width="280dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/register_container"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
         android:paddingTop="10dp"
         android:text="@string/passwordTips"/>
 

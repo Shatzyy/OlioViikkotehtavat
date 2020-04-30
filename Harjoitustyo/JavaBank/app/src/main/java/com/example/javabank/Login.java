@@ -14,7 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class Login extends AppCompatActivity {
+public class Login extends AppCompatActivity implements MyDialog.MyDialogListener {
     // Initialize DB connection
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -43,9 +43,8 @@ public class Login extends AppCompatActivity {
                         String securePassword = task.getResult().getString("password");
                         boolean passwordMatch = PasswordUtils.verifyUserPassword(pass.getText().toString(), securePassword, salt);
                         if(passwordMatch) {
-                            Intent intent = new Intent(Login.this, MainActivity.class);
-                            intent.putExtra("userRef", user.getText().toString());
-                            startActivity(intent);
+                            MyDialog myDialog = new MyDialog();
+                            myDialog.show(getSupportFragmentManager(), "Keylist dialog");
                         } else {
                             System.out.println("Invalid password");
                         }
@@ -64,5 +63,20 @@ public class Login extends AppCompatActivity {
         EditText pass = findViewById(R.id.LoginPassword);
         user.setText("");
         pass.setText("");
+    }
+
+    @Override
+    public void loadMainActivity(boolean b) {
+        EditText user = findViewById(R.id.LoginUserName);
+        EditText pass = findViewById(R.id.LoginPassword);
+        if (b) {
+            Intent intent = new Intent(Login.this, MainActivity.class);
+            intent.putExtra("userRef", user.getText().toString());
+            Toast.makeText(this, "Logged in!", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
+        } else {
+            user.setText("");
+            pass.setText("");
+        }
     }
 }

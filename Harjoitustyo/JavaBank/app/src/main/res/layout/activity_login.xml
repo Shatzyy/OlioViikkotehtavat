@@ -42,8 +42,8 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/LoginTitle"
-            android:autofillHints="@string/login_email"
-            android:hint="@string/login_email"
+            android:autofillHints="@string/login_username"
+            android:hint="@string/login_username"
             android:inputType="text" />
 
         <EditText

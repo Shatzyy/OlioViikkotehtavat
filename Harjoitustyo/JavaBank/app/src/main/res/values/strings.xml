@@ -34,7 +34,7 @@
     <string name="login_title">Please login</string>
     <string name="button_login">Login</string>
     <string name="button_login_cancel">Cancel</string>
-    <string name="login_email">Email</string>
+    <string name="login_username">Username</string>
     <string name="login_password">Password</string>
     <string name="login_createUser">Dont have an account? Create one!</string>
     <string name="welcome">Welcome to JavaBank!</string>
@@ -42,10 +42,17 @@
     <string name="register_title">Please register</string>
     <string name="button_register">Register</string>
     <string name="button_register_cancel">Cancel</string>
-    <string name="register_email">Email</string>
+    <string name="register_username">Username</string>
     <string name="register_password">Password</string>
     <string name="register_password_again">Confirm password</string>
     <string name="return_login">Return back to login screen</string>
-    <string name="passwordTips">Password has to contain more than 12 characters, atleast one number and one big letter.</string>
+    <string name="passwordTips">1) Password must contain at least 12 characters
+        \n2) Password must contain at least 1 number
+        \n3) Password must contain at least 1 upper case letter
+        \n4) Password must contain at least 1 lower case letter
+        \n5) Password must contain at least 1 special character
+        \n6) Password must not contain any spaces</string>
+
+    <string name="keylist">Insert keycode</string>
 
 </resources>

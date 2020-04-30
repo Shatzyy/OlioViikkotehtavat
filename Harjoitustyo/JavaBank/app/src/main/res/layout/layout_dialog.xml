@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/keylist_show"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="24sp"/>
+
+    <EditText
+        android:id="@+id/keylist_insert"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/keylist_show"
+        android:gravity="center"
+        android:hint="@string/keylist"
+        android:autofillHints="@string/keylist" />
+
+</RelativeLayout>
