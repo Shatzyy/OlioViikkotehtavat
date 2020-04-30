@@ -1,6 +1,5 @@
 package com.example.javabank;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,13 +18,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AccountFragment extends Fragment {
     private ArrayList<Account> accountList = new ArrayList<>();
-    private ArrayList<String> spinnerList = new ArrayList<>();
+    private BankManager bm = BankManager.getInstance();
 
     @Nullable
     @Override
@@ -34,12 +33,6 @@ public class AccountFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
-        //Initialize database
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Link context & views
-        Context context = view.getContext();
-        RecyclerView showAccounts = view.findViewById(R.id.showAccounts);
         super.onViewCreated(view, savedInstanceState);
 
         // Buttons
@@ -55,33 +48,21 @@ public class AccountFragment extends Fragment {
         final EditText createAcc_creditLimit = view.findViewById(R.id.createCreditLimit);
         final EditText updateAcc_accNr = view.findViewById(R.id.updateAccNr);
         final EditText updateAcc_creditLimit = view.findViewById(R.id.updateCreditLimit);
-        EditText deleteAcc_accNr = view.findViewById(R.id.deleteAccNr);
+        final EditText deleteAcc_accNr = view.findViewById(R.id.deleteAccNr);
 
         // Other
         final CheckBox checkCredit = view.findViewById(R.id.creditCheck);
+        final Spinner spin = view.findViewById(R.id.updateAccBankCard);
+        RecyclerView showAccounts = view.findViewById(R.id.showAccounts);
 
         // Setting Spinner for BankCard connection
-        // TODO get bank cards from database and add them to spinnerlist
-        // TODO Delete dummy data
-        spinnerList.add("");
-        spinnerList.add("Card 1");
-        spinnerList.add("Card 2");
-        spinnerList.add("Card 3");
-        final Spinner spin = view.findViewById(R.id.updateAccBankCard);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, spinnerList);
+        ArrayList<String> spinnerList = bm.getBankCardNames();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, spinnerList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(adapter);
 
-        // Gather data in list //TODO Fill AccountList from Database
-        /*for (int i=0; i<5; i++) {
-            if (true) {
-                Account tmp = new DebitAccount();
-            } else {
-                Account tmp = new CreditAccount();
-            }
-        } */
-
         // TODO delete dummy data
+
         Account tmp1 = new DebitAccount("FI23 1400 1225 3244 29", 1000000, "13421");
         Account tmp2 = new DebitAccount("FI78 1400 1225 9981 11", 552312, "13421");
         Account tmp3 = new DebitAccount("FI11 1400 1225 1009 75", 39123, "13421");
@@ -95,19 +76,39 @@ public class AccountFragment extends Fragment {
         accountList.add(tmp5);
         accountList.add(tmp6);
 
-        // Set adapter for RecycleView
-        RecycleAdapter recycleAdapter = new RecycleAdapter(context, accountList);
+        // Set adapter for RecycleView //TODO Set Listener when database changed and update view after changing database
+        //ArrayList<Account> accountList = bm.getAccounts();
+        RecycleAdapter recycleAdapter = new RecycleAdapter(getContext(), accountList);
         showAccounts.setAdapter(recycleAdapter);
-        showAccounts.setLayoutManager(new LinearLayoutManager(context));
+        showAccounts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Set onClick listeners to buttons
+        // Clicking creating account button checks are required fields filled and calls BankManager method to create account. Shows Toast based on result
         button_createAcc_accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO create new acc to database
+                if (createAcc_accNr.getText().toString().length()!=0) {
+                    if (checkCredit.isChecked()) {
+                        if(bm.createCreditAccount(createAcc_accNr.getText().toString(), createAcc_balance.getText().toString(), createAcc_creditLimit.getText().toString())) {
+                            Toast.makeText(getContext(), "Account created!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Creating account failed! Please check your inputs.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if(bm.createDebitAccount(createAcc_accNr.getText().toString(), createAcc_balance.getText().toString())) {
+                            Toast.makeText(getContext(), "Account created!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Creating account failed! Please check your inputs.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Please insert account number.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
+        // Clicking cancel button clears input fields
         button_createAcc_decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,13 +119,23 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        // Clicking updating account button checks are required fields filled and calls BankManager method to update account. Shows Toast based on result
         button_updateAcc_accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO update acc in database
+                if (updateAcc_accNr.getText().toString().length()!=0) {
+                    if(bm.updateAccount(updateAcc_accNr.getText().toString(), updateAcc_creditLimit.getText().toString(), spin.getSelectedItem().toString())) {
+                        Toast.makeText(getContext(), "Account updated!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Updating account failed! Please check your inputs.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Please insert account number.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
+        // Clicking cancel button clears input fields
         button_updateAcc_decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,14 +145,20 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        // Clicking delete account button checks is there account number filled and calls BankManager method to delete account. Shows Toast based on result
         button_deleteAcc_accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO delete Acc from database
+                if (deleteAcc_accNr.getText().toString().length()!=0) {
+                    bm.deleteAccount(deleteAcc_accNr.getText().toString());
+                } else {
+                    Toast.makeText(getContext(), "Please insert account number you'd like to delete.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
-        // Set OnCheckedChange listener to checkbox
+        // Set OnCheckedChange listener to checkbox. Sets CreditLimit field visibility
         checkCredit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

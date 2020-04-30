@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Register">
+
+    <TextView
+        android:id="@+id/loadLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="10dp"
+        android:text="@string/return_login"
+        android:onClick="loadLogin"/>
+
+    <RelativeLayout
+        android:id="@+id/register_container"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:padding="8dp"
+        android:background="@drawable/textview_border">
+
+
+        <TextView
+            android:id="@+id/RegisterTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/register_title"
+            android:textColor="@color/colorBlack"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/RegisterUserName"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/RegisterTitle"
+            android:autofillHints="@string/register_email"
+            android:hint="@string/register_email"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/RegisterPassword"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/RegisterUserName"
+            android:autofillHints="@string/register_password"
+            android:hint="@string/register_password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/RegisterPasswordAgain"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/RegisterPassword"
+            android:autofillHints="@string/register_password_again"
+            android:hint="@string/register_password_again"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/registerBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_below="@+id/RegisterPasswordAgain"
+            android:gravity="center"
+            android:text="@string/button_register"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:onClick="register"/>
+
+        <Button
+            android:id="@+id/registerBtn_decline"
+            android:layout_width="137dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/RegisterPasswordAgain"
+            android:layout_toEndOf="@id/registerBtn"
+            android:gravity="center"
+            android:text="@string/button_register_cancel"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:onClick="cancelRegister"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/passwordTips"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/register_container"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:text="@string/passwordTips"/>
+
+</RelativeLayout>

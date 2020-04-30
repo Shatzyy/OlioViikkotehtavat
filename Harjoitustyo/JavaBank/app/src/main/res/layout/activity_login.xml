@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Login">
+
+    <TextView
+        android:id="@+id/welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="140dp"
+        android:gravity="center"
+        android:text="@string/welcome"
+        android:textColor="@color/colorBlack"
+        android:textSize="40sp" />
+
+    <RelativeLayout
+        android:id="@+id/login_container"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:padding="8dp"
+        android:background="@drawable/textview_border">
+
+
+        <TextView
+            android:id="@+id/LoginTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_title"
+            android:textColor="@color/colorBlack"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/LoginUserName"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/LoginTitle"
+            android:autofillHints="@string/login_email"
+            android:hint="@string/login_email"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/LoginPassword"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/LoginUserName"
+            android:autofillHints="@string/login_password"
+            android:hint="@string/login_password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/loginBtn"
+            android:layout_width="137dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/LoginPassword"
+            android:gravity="center"
+            android:text="@string/button_login"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:onClick="login"/>
+
+        <Button
+            android:id="@+id/loginBtn_decline"
+            android:layout_width="137dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/LoginPassword"
+            android:layout_toEndOf="@id/loginBtn"
+            android:gravity="center"
+            android:text="@string/button_login_cancel"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:onClick="cancelLogin"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_container"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="10dp"
+        android:text="@string/login_createUser"
+        android:onClick="loadRegister"/>
+
+</RelativeLayout>

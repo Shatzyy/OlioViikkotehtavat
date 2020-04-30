@@ -31,4 +31,21 @@
     <string name="account_update_title">Update account</string>
     <string name="linkCardTitle">Linked BankCard:</string>
 
+    <string name="login_title">Please login</string>
+    <string name="button_login">Login</string>
+    <string name="button_login_cancel">Cancel</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_createUser">Dont have an account? Create one!</string>
+    <string name="welcome">Welcome to JavaBank!</string>
+
+    <string name="register_title">Please register</string>
+    <string name="button_register">Register</string>
+    <string name="button_register_cancel">Cancel</string>
+    <string name="register_email">Email</string>
+    <string name="register_password">Password</string>
+    <string name="register_password_again">Confirm password</string>
+    <string name="return_login">Return back to login screen</string>
+    <string name="passwordTips">Password has to contain more than 12 characters, atleast one number and one big letter.</string>
+
 </resources>

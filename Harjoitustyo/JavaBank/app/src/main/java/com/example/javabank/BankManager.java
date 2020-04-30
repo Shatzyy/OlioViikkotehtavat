@@ -1,6 +1,21 @@
 package com.example.javabank;
 
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 // Class for managing all Bank activities
 public class BankManager {
@@ -8,7 +23,7 @@ public class BankManager {
     private static final BankManager bm = new BankManager();
     // Initialize Database connection
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    private String userRef = "12312321312"; //TODO get from database
     public BankManager () {
 
     }
@@ -20,16 +35,131 @@ public class BankManager {
 
 
     // Methods for managing accounts
-    public void createAccount(String acc, long b) {
-        //TODO account managing
+    public boolean createDebitAccount(String acc, String bal) {
+        try {
+            long balance = Long.parseLong(bal);
+            Account tmp = new DebitAccount(acc, balance, userRef);
+            db.collection("users").document(userRef).collection("accounts").document(acc).set(tmp);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean createCreditAccount(String acc, String bal, String cLim) {
+        try {
+            long balance = Long.parseLong(bal);
+            long creditLimit = Long.parseLong(cLim);
+            Account tmp = new CreditAccount(acc, balance, userRef, creditLimit);
+            db.collection("users").document(userRef).collection("accounts").document(acc).set(tmp);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void deleteAccount(String acc) {
-        //TODO account managing
+        db.collection("users").document(userRef).collection("accounts").document(acc).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        System.out.println("Account deleted!");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Deleting account failed!");
+            }
+        });
+        db.collection("users").document(userRef).collection("cardLinks").document(acc).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        System.out.println("Card link deleted!");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Deleting card link failed!");
+            }
+        });
+
     }
 
-    public void updateAccount() {
-        //TODO account managing
+    public boolean updateAccount(String acc, String credLim, String linkCard) {
+        try {
+            long cLim;
+            if (credLim.length()==0) {
+                cLim = 0;
+            } else {
+                cLim = Long.parseLong(credLim);
+            }
+            if (cLim ==0 && linkCard.length()==0) {
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("creditLimit", FieldValue.delete());
+                db.collection("users").document(userRef).collection("accounts").document(acc).update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Credit limit updated.");
+                    }
+                });
+                db.collection("users").document(userRef).collection("cardLinks").document(acc).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Card link removed.");
+                    }
+                });
+            } else if (cLim==0) {
+                Map<String, Object> updates = new HashMap<>();
+                Map<String, Object> cardUpdates = new HashMap<>();
+                updates.put("creditLimit", FieldValue.delete());
+                cardUpdates.put("accountNr", acc);
+                cardUpdates.put("linkedCard", linkCard);
+                db.collection("users").document(userRef).collection("accounts").document(acc).update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Credit limit updated.");
+                    }
+                });
+                db.collection("users").document(userRef).collection("cardLinks").document(acc).set(cardUpdates, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Card link updated.");
+                    }
+                });
+            } else if (linkCard.length()==0) {
+                db.collection("users").document(userRef).collection("cardLinks").document(acc).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Card link removed.");
+                    }
+                });
+            } else {
+                Map<String, Object> updates = new HashMap<>();
+                Map<String, Object> cardUpdates = new HashMap<>();
+                updates.put("creditLimit", cLim);
+                cardUpdates.put("accountNr", acc);
+                cardUpdates.put("linkedCard", linkCard);
+                db.collection("users").document(userRef).collection("accounts").document(acc).update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Credit limit updated.");
+                    }
+                });
+                db.collection("users").document(userRef).collection("cardLinks").document(acc).set(cardUpdates, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Card link updated.");
+                    }
+                });
+            }
+            return true;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     // Methods for managing bank cards
@@ -63,4 +193,14 @@ public class BankManager {
         // TODO Write JSON
     }
 
+    public ArrayList<String> getBankCardNames() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("");
+        list.add("Card 1");
+        return list;
+    }
+
+    public ArrayList<Account> getAccounts() {
+        return null;
+    }
 }
