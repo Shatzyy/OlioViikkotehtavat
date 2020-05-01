@@ -64,7 +64,7 @@ public class SettingsFragment extends Fragment {
         Button btnDeclinePassword = view.findViewById(R.id.decline_password_button);
 
         showAcc.setText(bm.getUserRef());
-        // Set database realtime listener
+        // Set database realtime listener for showing user data
         db.collection("users").document(bm.getUserRef()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {

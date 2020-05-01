@@ -1,13 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:padding="8dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <RelativeLayout
+        android:id="@+id/deposit_container"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:text="Fragment transfers"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
+        android:padding="4dp"
+        android:gravity="center"
+        android:background="@drawable/textview_border"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/depositTitle"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="@string/depositTitle"
+            android:textColor="@color/colorBlack"
+            android:gravity="center"
+            android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/selectDepositAccount"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/depositTitle"/>
+
+        <EditText
+            android:id="@+id/depositAmount"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/selectDepositAccount"
+            android:autofillHints="@string/amount"
+            android:hint="@string/amount"
+            android:inputType="text"/>
+
+        <Button
+            android:id="@+id/accept_deposit_button"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/depositAmount"
+            android:gravity="center"
+            android:padding="2dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/button_accept"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/decline_deposit_button"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/accept_deposit_button"
+            android:layout_below="@+id/depositAmount"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="@string/button_cancel"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/withdraw_container"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/deposit_container"
+        android:padding="4dp"
+        android:gravity="center"
+        android:background="@drawable/textview_border"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/withdrawTitle"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="@string/withdrawTitle"
+            android:textColor="@color/colorBlack"
+            android:gravity="center"
+            android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/selectWithdrawAccount"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/withdrawTitle"/>
+
+        <EditText
+            android:id="@+id/withdrawAmount"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/selectWithdrawAccount"
+            android:autofillHints="@string/amount"
+            android:hint="@string/amount"
+            android:inputType="text"/>
+
+        <Button
+            android:id="@+id/accept_withdraw_button"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/withdrawAmount"
+            android:gravity="center"
+            android:padding="2dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/button_accept"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/decline_withdraw_button"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/accept_withdraw_button"
+            android:layout_below="@+id/withdrawAmount"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="@string/button_cancel"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/transfer_container"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/withdraw_container"
+        android:gravity="center"
+        android:padding="4dp"
+        android:background="@drawable/textview_border">
+
+        <TextView
+            android:id="@+id/transferTitle"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:text="@string/transferTitle"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/selectTransferAccountFrom"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/transferTitle"/>
+
+        <TextView
+            android:id="@+id/selectTransferTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_below="@+id/selectTransferAccountFrom"
+            android:gravity="center"
+            android:text="@string/selectTransferType"
+            android:textSize="16sp"/>
+
+        <CheckBox
+            android:id="@+id/selectOutsideTransfer"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_below="@+id/selectTransferAccountFrom"
+            android:layout_toEndOf="@+id/selectTransferTitle"/>
+
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/selectTransferAccountTo"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/selectTransferTitle"
+            android:visibility="visible"/>
+
+        <EditText
+            android:id="@+id/transferOutsideAccount"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/selectTransferTitle"
+            android:hint="@string/account_nr"
+            android:inputType="text"
+            android:autofillHints="@string/account_nr"
+            android:visibility="invisible"/>
+
+        <EditText
+            android:id="@+id/transferAmount"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/selectTransferAccountTo"
+            android:hint="@string/amount"
+            android:inputType="text"
+            android:autofillHints="@string/amount"/>
+
+        <Button
+            android:id="@+id/accept_transfer_button"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/transferAmount"
+            android:layout_marginEnd="4dp"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="@string/button_accept"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/decline_transfer_button"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/accept_transfer_button"
+            android:layout_below="@+id/transferAmount"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="@string/button_cancel"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

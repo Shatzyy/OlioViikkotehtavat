@@ -17,6 +17,7 @@
         android:layout_below="@id/keylist_show"
         android:gravity="center"
         android:hint="@string/keylist"
-        android:autofillHints="@string/keylist" />
+        android:autofillHints="@string/keylist"
+        android:inputType="text" />
 
 </RelativeLayout>

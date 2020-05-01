@@ -14,6 +14,7 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 // Class for managing all Bank activities
 public class BankManager {
@@ -178,8 +179,33 @@ public class BankManager {
         // TODO withdraw
     }
 
-    public void depositMoney() {
-        // TODO deposit
+    public void depositMoney(final String acc, final long bal) {
+        db.collection("users").document(userRef).collection("accounts").document(acc).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        try {
+                            long currBal = Objects.requireNonNull(task.getResult()).getLong("balance");
+                            currBal = currBal + (bal*100);
+                            Map<String, Object> tmp = new HashMap<>();
+                            tmp.put("balance", currBal);
+                            db.collection("users").document(userRef).collection("accounts").document(acc).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    System.out.println("Balance updated!");
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("Database search failed!");
+                    }
+                });
     }
 
     public void transferMoney() {

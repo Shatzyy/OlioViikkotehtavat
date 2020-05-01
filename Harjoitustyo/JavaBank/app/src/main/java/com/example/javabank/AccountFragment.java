@@ -18,11 +18,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class AccountFragment extends Fragment {
-    private ArrayList<Account> accountList = new ArrayList<>();
+    // Initialize DB
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    // Initialize BankManager
     private BankManager bm = BankManager.getInstance();
 
     @Nullable
@@ -53,7 +61,7 @@ public class AccountFragment extends Fragment {
         // Other
         final CheckBox checkCredit = view.findViewById(R.id.creditCheck);
         final Spinner spin = view.findViewById(R.id.updateAccBankCard);
-        RecyclerView showAccounts = view.findViewById(R.id.showAccounts);
+        final RecyclerView showAccounts = view.findViewById(R.id.showAccounts);
 
         // Setting Spinner for BankCard connection
         ArrayList<String> spinnerList = bm.getBankCardNames();
@@ -61,26 +69,32 @@ public class AccountFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(adapter);
 
-        // TODO delete dummy data
+        // Set realtime listener for database
+        db.collection("users").document(bm.getUserRef()).collection("accounts").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
+                ArrayList<Account> accountList = new ArrayList<>();
+                // Create accountList from database query
+                for (QueryDocumentSnapshot doc : value) {
+                    String accNr = doc.getId();
+                    Long balance = doc.getLong("balance");
+                    if (doc.contains("creditLimit")) {
+                        long cLim = doc.getLong("creditLimit");
+                        Account tmp = new CreditAccount(accNr, balance, bm.getUserRef(), cLim);
+                        accountList.add(tmp);
+                    } else {
+                        Account tmp = new DebitAccount(accNr, balance, bm.getUserRef());
+                        accountList.add(tmp);
+                    }
+                }
+                // Set adapter for RecycleView for showing accounts
+                RecycleAdapter recycleAdapter = new RecycleAdapter(getContext(), accountList);
+                showAccounts.setAdapter(recycleAdapter);
+                showAccounts.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
+        });
 
-        Account tmp1 = new DebitAccount("FI23 1400 1225 3244 29", 1000000, "13421");
-        Account tmp2 = new DebitAccount("FI78 1400 1225 9981 11", 552312, "13421");
-        Account tmp3 = new DebitAccount("FI11 1400 1225 1009 75", 39123, "13421");
-        Account tmp4 = new DebitAccount("FI65 1400 1225 3997 66", 0, "13421");
-        Account tmp5 = new DebitAccount("FI82 1400 1225 2552 49", 3502000, "13421");
-        Account tmp6 = new DebitAccount("FI99 1400 1225 4234 52", 12344, "13421");
-        accountList.add(tmp1);
-        accountList.add(tmp2);
-        accountList.add(tmp3);
-        accountList.add(tmp4);
-        accountList.add(tmp5);
-        accountList.add(tmp6);
 
-        // Set adapter for RecycleView //TODO Set Listener when database changed and update view after changing database
-        //ArrayList<Account> accountList = bm.getAccounts();
-        RecycleAdapter recycleAdapter = new RecycleAdapter(getContext(), accountList);
-        showAccounts.setAdapter(recycleAdapter);
-        showAccounts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Set onClick listeners to buttons
         // Clicking creating account button checks are required fields filled and calls BankManager method to create account. Shows Toast based on result
