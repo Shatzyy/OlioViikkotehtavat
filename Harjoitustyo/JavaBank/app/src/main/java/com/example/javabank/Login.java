@@ -46,10 +46,10 @@ public class Login extends AppCompatActivity implements MyDialog.MyDialogListene
                             MyDialog myDialog = new MyDialog();
                             myDialog.show(getSupportFragmentManager(), "Keylist dialog");
                         } else {
-                            System.out.println("Invalid password");
+                            Toast.makeText(Login.this, "Password incorrect", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        System.out.println("No such username");
+                        Toast.makeText(Login.this, "Username not found", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     System.out.println("ERROR: " + task.getException());

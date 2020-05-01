@@ -55,4 +55,14 @@
 
     <string name="keylist">Insert keycode</string>
 
+    <string name="settingsTitle">Update your information</string>
+    <string name="settings_name">Full name</string>
+    <string name="settings_address">Address</string>
+    <string name="settings_new_password">New password</string>
+    <string name="settings_new_password_again">Confirm new password</string>
+    <string name="settings_current_password">Current password</string>
+    <string name="settingsPasswordTitle">Change your password</string>
+    <string name="settings_number">Phone number</string>
+
+
 </resources>

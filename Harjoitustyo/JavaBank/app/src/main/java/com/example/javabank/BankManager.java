@@ -205,4 +205,32 @@ public class BankManager {
     public void setUserRef(String s) {
         this.userRef = s;
     }
+
+    public void updateInformation(String name, String address, String phone) {
+        Map<String, Object> tmp = new HashMap<>();
+        if (name.length()!=0) {
+            tmp.put("name", name);
+        }
+        if (address.length()!=0) {
+            tmp.put("address", address);
+        }
+        if (phone.length()!=0) {
+            tmp.put("phone", phone);
+        }
+        db.collection("users").document(userRef).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                System.out.println("User information updated!");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Updating user information failed!");
+            }
+        });
+    }
+
+    public String getUserRef() {
+        return userRef;
+    }
 }

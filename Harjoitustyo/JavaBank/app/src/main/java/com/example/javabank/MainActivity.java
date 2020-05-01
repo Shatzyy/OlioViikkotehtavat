@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -40,6 +41,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         // Set userRef in BankManager
         String userRef = getIntent().getStringExtra("userRef");
         bm.setUserRef(userRef);
+
+        // Set userRef in Navigation Drawer
+        TextView user = navigationView.getHeaderView(0).findViewById(R.id.userHeader);
+        user.setText(userRef);
 
         // Show main fragment after creating MainActivity
         if (savedInstanceState == null) {

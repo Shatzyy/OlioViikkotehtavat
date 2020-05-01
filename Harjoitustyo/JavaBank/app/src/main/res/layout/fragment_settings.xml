@@ -1,13 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:padding="8dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/show_settings"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:text="Fragment settings"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
+        android:layout_marginBottom="10dp"
+        android:padding="8dp"
+        android:gravity="center"
+        android:background="@drawable/textview_border">
+
+        <TextView
+            android:id="@+id/show_accTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_username"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/show_accName"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/show_phoneTitle"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/show_fullName"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/show_phoneTitle"
+            android:layout_below="@+id/show_accTitle"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/show_address"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="100dp"
+            android:layout_toEndOf="@+id/show_phoneTitle"
+            android:layout_below="@+id/show_nameTitle"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/show_phone"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/show_phoneTitle"
+            android:layout_below="@+id/show_address"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/show_nameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/show_accTitle"
+            android:text="@string/settings_name"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/show_addressTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/show_nameTitle"
+            android:text="@string/settings_address"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/show_phoneTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/show_address"
+            android:text="@string/settings_number"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/setting_container"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/show_settings"
+        android:padding="4dp"
+        android:gravity="center"
+        android:background="@drawable/textview_border"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/settingsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="@string/settingsTitle"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/settingsFullName"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settingsTitle"
+            android:hint="@string/settings_name"
+            android:inputType="text"
+            android:autofillHints="@string/settings_name"/>
+
+        <EditText
+            android:id="@+id/settingsAddress"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settingsFullName"
+            android:autofillHints="@string/settings_address"
+            android:hint="@string/settings_address"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/settingsPhoneNumber"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settingsAddress"
+            android:hint="@string/settings_number"
+            android:inputType="phone"
+            android:autofillHints="@string/settings_number"/>
+
+        <Button
+            android:id="@+id/accept_settings_button"
+            android:layout_width="145dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settingsPhoneNumber"
+            android:gravity="center"
+            android:padding="0dp"
+            android:text="@string/button_accept"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/decline_settings_button"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/accept_settings_button"
+            android:layout_below="@+id/settingsPhoneNumber"
+            android:gravity="center"
+            android:padding="0dp"
+            android:text="@string/button_cancel"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/password_container"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setting_container"
+        android:gravity="center"
+        android:padding="4dp"
+        android:background="@drawable/textview_border">
+
+        <TextView
+            android:id="@+id/passwordTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="@string/settingsPasswordTitle"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/settingsCurrentPassword"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/passwordTitle"
+            android:hint="@string/settings_current_password"
+            android:inputType="textPassword"
+            android:autofillHints="@string/settings_current_password"/>
+
+        <EditText
+            android:id="@+id/settingsNewPassword"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settingsCurrentPassword"
+            android:autofillHints="@string/settings_new_password"
+            android:hint="@string/settings_new_password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/settingsNewPasswordAgain"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settingsNewPassword"
+            android:hint="@string/settings_new_password_again"
+            android:inputType="textPassword"
+            android:autofillHints="@string/settings_new_password_again"/>
+
+        <Button
+            android:id="@+id/accept_password_button"
+            android:layout_width="145dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settingsNewPasswordAgain"
+            android:gravity="center"
+            android:padding="0dp"
+            android:text="@string/button_accept"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/decline_password_button"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/accept_password_button"
+            android:layout_below="@+id/settingsNewPasswordAgain"
+            android:gravity="center"
+            android:padding="0dp"
+            android:text="@string/button_cancel"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>
