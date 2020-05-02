@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorLightGrey">
+    android:gravity="center_horizontal"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/acc_title"
@@ -18,106 +19,22 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/showAccounts"
         android:layout_width="match_parent"
-        android:layout_height="168dp"
-        android:padding="2dp"
+        android:layout_height="231dp"
+        android:padding="8dp"
         android:layout_below="@+id/acc_title"
         android:gravity="center"
-        android:background="@color/colorDarkGrey"/>
-
-    <RelativeLayout
-        android:id="@+id/acc_create_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/showAccounts"
-        android:padding="2dp"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/createAccTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="@string/account_create_title"
-            android:textColor="@color/colorBlack"
-            android:textStyle="bold"/>
-
-        <EditText
-            android:id="@+id/createAccNr"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/createAccTitle"
-            android:hint="@string/account_nr"
-            android:inputType="text"
-            android:autofillHints="@string/account_nr"/>
-
-        <EditText
-            android:id="@+id/createBalance"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/createAccNr"
-            android:hint="@string/account_balance"
-            android:inputType="text"
-            android:autofillHints="@string/account_balance"/>
-
-        <TextView
-            android:id="@+id/creditAccTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/createBalance"
-            android:textSize="20sp"
-            android:text="@string/account_add_credit"/>
-
-        <CheckBox
-            android:id="@+id/creditCheck"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/creditAccTitle"
-            android:layout_below="@+id/createBalance"
-            android:checked="false"/>
-
-        <EditText
-            android:id="@+id/createCreditLimit"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/creditAccTitle"
-            android:hint="@string/account_creditLimit"
-            android:inputType="text"
-            android:autofillHints="@string/account_creditLimit"
-            android:visibility="invisible"/>
-
-        <Button
-            android:id="@+id/createAcc_btn_accept"
-            android:layout_width="145dp"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/createAccNr"
-            android:layout_below="@+id/createAccTitle"
-            android:gravity="center"
-            android:padding="0dp"
-            android:text="@string/button_accept"
-            android:textSize="25sp"
-            android:textStyle="bold"/>
-
-        <Button
-            android:id="@+id/createAcc_btn_decline"
-            android:layout_width="145dp"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/createAccNr"
-            android:layout_below="@+id/createAcc_btn_accept"
-            android:gravity="center"
-            android:padding="0dp"
-            android:text="@string/button_cancel"
-            android:textSize="25sp"
-            android:textStyle="bold"/>
-
-    </RelativeLayout>
+        android:background="@drawable/textview_border"
+        android:layout_marginBottom="10dp"/>
 
     <RelativeLayout
         android:id="@+id/acc_update_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/acc_create_container"
-        android:padding="2dp"
-        android:gravity="center">
+        android:layout_below="@+id/showAccounts"
+        android:padding="8dp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/textview_border">
 
         <TextView
             android:id="@+id/updateAccTitle"
@@ -137,32 +54,48 @@
             android:inputType="text"
             android:autofillHints="@string/account_nr"/>
 
-        <EditText
-            android:id="@+id/updateCreditLimit"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/updateAccNr"
-            android:hint="@string/account_creditLimit"
-            android:inputType="text"
-            android:autofillHints="@string/account_creditLimit"/>
-
-
         <TextView
             android:id="@+id/linkCardTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/updateCreditLimit"
+            android:layout_below="@+id/updateAccNr"
             android:text="@string/linkCardTitle"
             android:textSize="20sp"
-            />
+            android:layout_marginBottom="4dp" />
 
         <Spinner
             android:id="@+id/updateAccBankCard"
-            android:layout_width="120dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/updateCreditLimit"
+            android:layout_below="@+id/updateAccNr"
             android:layout_toEndOf="@+id/linkCardTitle"
             android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/creditAccTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linkCardTitle"
+            android:textSize="20sp"
+            android:text="@string/account_add_credit"/>
+
+        <CheckBox
+            android:id="@+id/creditCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/creditAccTitle"
+            android:layout_below="@+id/linkCardTitle"
+            android:checked="false"/>
+
+        <EditText
+            android:id="@+id/updateCreditLimit"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/creditAccTitle"
+            android:hint="@string/account_creditLimit"
+            android:inputType="number"
+            android:autofillHints="@string/account_creditLimit"
+            android:visibility="invisible"/>
 
         <Button
             android:id="@+id/updateAcc_btn_accept"
@@ -195,8 +128,9 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_below="@+id/acc_update_container"
-        android:padding="2dp"
-        android:gravity="center">
+        android:padding="8dp"
+        android:gravity="center"
+        android:background="@drawable/textview_border">
 
         <TextView
             android:id="@+id/deleteAccTitle"

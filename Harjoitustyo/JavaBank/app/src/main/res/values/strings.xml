@@ -20,18 +20,17 @@
     <string name="account_nr">AccountNumber</string>
     <string name="account_balance">Balance</string>
     <string name="account_image">Account image</string>
-    <string name="account_create_title">Create new account</string>
     <string name="account_add_credit">Add credit limit?</string>
     <string name="account_creditLimit">Credit limit</string>
     <string name="account_show">Show account</string>
 
-    <string name="button_accept">Accept ✔</string>
-    <string name="button_cancel">Cancel ✘</string>
+    <string name="button_accept">Accept</string>
+    <string name="button_cancel">Cancel</string>
     <string name="button_delete">Delete</string>
 
     <string name="account_delete_title">Delete account</string>
-    <string name="account_update_title">Update account</string>
-    <string name="linkCardTitle">Linked BankCard:</string>
+    <string name="account_update_title">Create or update account</string>
+    <string name="linkCardTitle">Card:</string>
 
     <string name="login_title">Please login</string>
     <string name="button_login">Login</string>
