@@ -73,9 +73,15 @@ public class SettingsFragment extends Fragment {
                     return;
                 }
                 if (documentSnapshot != null && documentSnapshot.exists()) {
-                    showName.setText(Objects.requireNonNull(documentSnapshot.get("name")).toString());
-                    showAddress.setText(Objects.requireNonNull(documentSnapshot.get("address")).toString());
-                    showPhone.setText(Objects.requireNonNull(documentSnapshot.get("phone")).toString());
+                    if (documentSnapshot.contains("name")) {
+                        showName.setText(documentSnapshot.get("name").toString());
+                    }
+                    if (documentSnapshot.contains("address")) {
+                        showAddress.setText(documentSnapshot.get("address").toString());
+                    }
+                    if (documentSnapshot.contains("phone")) {
+                        showPhone.setText(documentSnapshot.get("phone").toString());
+                    }
                 } else {
                     System.out.println("Current data: null");
                     showName.setText("");
@@ -111,11 +117,10 @@ public class SettingsFragment extends Fragment {
                 String name = updateName.getText().toString();
                 String address = updateAddress.getText().toString();
                 String phone = updatePhone.getText().toString();
-                bm.updateInformation(name, address, phone);
+                bm.updateInformation(name, address, phone, getContext());
                 updateName.setText("");
                 updateAddress.setText("");
                 updatePhone.setText("");
-                Toast.makeText(getContext(), "Information updated!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -128,54 +133,17 @@ public class SettingsFragment extends Fragment {
                 String strRegEx = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*_])(?=\\S+$).{8,}$";
                 if (newPw.equals(newPw2)) {
                     if(newPw.matches(strRegEx)) {
-                        db.collection("users").document(bm.getUserRef()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        String salt = task.getResult().getString("salt");
-                                        String securePassword = task.getResult().getString("password");
-                                        boolean passwordMatch = PasswordUtils.verifyUserPassword(currPw, securePassword, salt);
-                                        if(passwordMatch) {
-                                            Map<String, Object> tmp = new HashMap<>();
-                                            String newSalt = PasswordUtils.getSalt(30);
-                                            String newSecurePw = PasswordUtils.generateSecurePassword(newPw, newSalt);
-                                            tmp.put("salt", newSalt);
-                                            tmp.put("password", newSecurePw);
-                                            db.collection("users").document(bm.getUserRef()).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    Toast.makeText(getContext(), "Password changed!", Toast.LENGTH_SHORT).show();
-                                                    currPassword.setText("");
-                                                    newPassword.setText("");
-                                                    newPassword2.setText("");
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(getContext(), "Updating password failed!", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                        } else {
-                                            Toast.makeText(getContext(), "Password incorrect", Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(getContext(), "Username not found", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    System.out.println("ERROR: " + task.getException());
-                                }
-                            }
-                        });
+                        bm.updatePassword(currPw, newPw, getContext());
                     } else {
                         Toast.makeText(getContext(), "New password is not strong enough", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getContext(), "New passwords dont match!", Toast.LENGTH_SHORT).show();
+
                 }
-
-
+                currPassword.setText("");
+                newPassword.setText("");
+                newPassword2.setText("");
             }
         });
     }

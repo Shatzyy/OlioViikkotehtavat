@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -15,14 +16,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class TransferFragment extends Fragment {
@@ -64,6 +71,22 @@ public class TransferFragment extends Fragment {
         // Other
         final CheckBox checkTransferExternal = view.findViewById(R.id.selectOutsideTransfer);
 
+        // Set checkbox listener
+        checkTransferExternal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (checkTransferExternal.isChecked()) {
+                    selectTransferAccountTo.setVisibility(View.INVISIBLE);
+                    transferAccountExternal.setVisibility(View.VISIBLE);
+                    transferAccountExternal.setText("");
+                } else {
+                    selectTransferAccountTo.setVisibility(View.VISIBLE);
+                    transferAccountExternal.setVisibility(View.INVISIBLE);
+                    transferAccountExternal.setText("");
+                }
+            }
+        });
+
         // Set database realtime listener for inflating spinnerList
         final ArrayList<String> spinnerList = new ArrayList<>();
         db.collection("users").document(bm.getUserRef()).collection("accounts").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -74,6 +97,7 @@ public class TransferFragment extends Fragment {
                     return;
                 }
                 if (value != null) {
+                    spinnerList.clear();
                     for (QueryDocumentSnapshot doc : value) {
                         spinnerList.add(doc.getId());
                     }
@@ -107,8 +131,9 @@ public class TransferFragment extends Fragment {
                 String am = depositAmount.getText().toString();
                 try {
                   long amount = Long.parseLong(am);
-                    bm.depositMoney(acc, amount);
-                    Toast.makeText(getContext(), "Deposit completed!", Toast.LENGTH_SHORT).show();
+                    bm.depositMoney(acc, amount, getContext());
+                    depositAmount.setText("");
+                    selectDepositAccount.setSelection(0);
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(), "Deposit failed! Check your inputs.", Toast.LENGTH_SHORT).show();
@@ -122,6 +147,17 @@ public class TransferFragment extends Fragment {
                 selectDepositAccount.setSelection(0);
             }
         });
+        btnAcceptWithdraw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String withdrawAccount = selectWithdrawAccount.getSelectedItem().toString();
+                String amount = withdrawAmount.getText().toString();
+                bm.withdrawMoney(withdrawAccount, amount, getContext());
+                withdrawAmount.setText("");
+                selectWithdrawAccount.setSelection(0);
+            }
+        });
+
         btnDeclineWithdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +165,35 @@ public class TransferFragment extends Fragment {
                 selectWithdrawAccount.setSelection(0);
             }
         });
+        btnAcceptTransfer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkTransferExternal.isChecked()) {
+                    if (selectTransferAccountFrom.getSelectedItem().toString().equals(transferAccountExternal.getText().toString())) {
+                        Toast.makeText(getContext(), "Cant transfer to same account!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        String transferFrom = selectTransferAccountFrom.getSelectedItem().toString();
+                        String transferTo = transferAccountExternal.getText().toString();
+                        String amount = transferAmount.getText().toString();
+                        bm.externalTransfer(transferFrom, transferTo, amount, getContext());
+                    }
+                } else {
+                    if (selectTransferAccountFrom.getSelectedItem().toString().equals(selectTransferAccountTo.getSelectedItem().toString())) {
+                        Toast.makeText(getContext(), "Cant transfer to same account!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        String transferFrom = selectTransferAccountFrom.getSelectedItem().toString();
+                        String transferTo = selectTransferAccountTo.getSelectedItem().toString();
+                        String amount = transferAmount.getText().toString();
+                        bm.transferMoney(transferFrom, transferTo, amount, getContext());
+                    }
+                }
+                selectTransferAccountFrom.setSelection(0);
+                selectTransferAccountTo.setSelection(0);
+                transferAmount.setText("");
+                checkTransferExternal.setChecked(false);
+            }
+        });
+
         btnDeclineTransfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
