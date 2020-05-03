@@ -19,15 +19,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -67,17 +61,17 @@ class BankManager {
     // Methods for managing accounts
     ////////////////////////////////////////////////////////////////////////
     // Finds account and deletes it & card links assosiated with the account
-    void deleteAccount(String acc) {
+    void deleteAccount(String acc, final Context ct) {
         db.collection("users").document(userRef).collection("accounts").document(acc).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        System.out.println("Account deleted!");
+                        Toast.makeText(ct, "Account deleted successfully!", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                System.out.println("Deleting account failed!");
+                Toast.makeText(ct, "Deleting account failed!", Toast.LENGTH_SHORT).show();
             }
         });
         db.collection("users").document(userRef).collection("cardLinks").document(acc).delete()
@@ -128,8 +122,8 @@ class BankManager {
                             Map<String, Object> updates = new HashMap<>();
                             Map<String, Object> cardUpdates = new HashMap<>();
                             updates.put("creditLimit", FieldValue.delete());
+                            cardUpdates.put("cardNr", linkCard);
                             cardUpdates.put("accountNr", acc);
-                            cardUpdates.put("linkedCard", linkCard);
                             db.collection("users").document(userRef).collection("accounts").document(acc).update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -163,8 +157,8 @@ class BankManager {
                             Map<String, Object> updates = new HashMap<>();
                             Map<String, Object> cardUpdates = new HashMap<>();
                             updates.put("creditLimit", cLim);
+                            cardUpdates.put("cardNr", linkCard);
                             cardUpdates.put("accountNr", acc);
-                            cardUpdates.put("linkedCard", linkCard);
                             db.collection("users").document(userRef).collection("accounts").document(acc).update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -209,8 +203,8 @@ class BankManager {
                         }
                         if (linkCard.length()!=0) {
                             Map<String, Object> tmp = new HashMap<>();
+                            tmp.put("cardNr", linkCard);
                             tmp.put("accountNr", acc);
-                            tmp.put("linkedCard", linkCard);
                             db.collection("users").document(userRef).collection("cardLinks").document(acc).set(tmp, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -234,7 +228,7 @@ class BankManager {
 
 
     // Method for writing account information into CSV -file
-    void writeCSV(final String fname, final String accNr, final Context ct) {
+    void writeCSV(final String fName, final String accNr, final Context ct) {
         db.collection("users").document(userRef).collection("accounts").document(accNr).collection("history").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
@@ -245,11 +239,11 @@ class BankManager {
                 }
                 try {
                     File rootFolder = ct.getExternalFilesDir(null);
-                    File file = new File(rootFolder, fname);
+                    File file = new File(rootFolder, fName);
                     BufferedWriter bw = new BufferedWriter(new FileWriter(file));
                     bw.write(data.toString());
                     bw.close();
-                    Toast.makeText(ct, "File " + fname + " saved to local files.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ct, "File " + fName + " saved to local files.", Toast.LENGTH_SHORT).show();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Toast.makeText(ct, "I/O Error! Please try again.", Toast.LENGTH_SHORT).show();
@@ -260,24 +254,34 @@ class BankManager {
 
     // Methods for managing bank cards
     ////////////////////////////////////////////////////////////////////////
-    void createBankCard() {
+    // Checks does the given card exist, if it does, updates daily limit & cardLink, if doesn't, creates the card
+    void createUpdateBankCard(String card, String acc, long limit, Context ct) {
         //TODO card managing
     }
 
-    void deleteBankCard() {
-        //TODO card managing
+    void deleteBankCard(final String card, final Context ct) {
+        db.collection("users").document(userRef).collection("cardLinks").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
+                for (DocumentSnapshot doc : value) {
+                    if (doc.getString("cardNr").equals(card)) {
+                        db.collection("users").document(userRef).collection("cardLinks").document(doc.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(ct, "Card deleted!", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(ct, "Deleting card failed! Please try again.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 
-    void updateBankCard() {
-        //TODO card managing
-    }
-
-    ArrayList<String> getBankCardNames() { // TODO database connection
-        ArrayList<String> list = new ArrayList<>();
-        list.add("");
-        list.add("Card 1");
-        return list;
-    }
 
     // Methods for transfers, deposits & withdraws
     ////////////////////////////////////////////////////////////////////////

@@ -60,11 +60,22 @@ public class AccountFragment extends Fragment {
         final Spinner spin = view.findViewById(R.id.updateAccBankCard);
         final RecyclerView showAccounts = view.findViewById(R.id.showAccounts);
 
-        // Setting Spinner for BankCard connection
-        ArrayList<String> spinnerList = bm.getBankCardNames();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, spinnerList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spin.setAdapter(adapter);
+        // Set realtime listener for database for showing cards in spinner
+        db.collection("users").document(bm.getUserRef()).collection("cards").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
+                final ArrayList<String> cardList = new ArrayList<>();
+                // Create cardList from database query
+                for (QueryDocumentSnapshot doc : value) {
+                    String card = doc.getId();
+                    cardList.add(card);
+                }
+                // Set adapter for Spinner for showing accounts
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, cardList);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spin.setAdapter(adapter);
+            }
+        });
 
         // Set realtime listener for database
         db.collection("users").document(bm.getUserRef()).collection("accounts").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -106,8 +117,6 @@ public class AccountFragment extends Fragment {
                         fragmentTransaction.replace(R.id.container, fragment).commit();
                     }
                 });
-
-
             }
         });
 
@@ -146,7 +155,8 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (deleteAcc_accNr.getText().toString().length()!=0) {
-                    bm.deleteAccount(deleteAcc_accNr.getText().toString());
+                    bm.deleteAccount(deleteAcc_accNr.getText().toString(), getContext());
+                    deleteAcc_accNr.setText("");
                 } else {
                     Toast.makeText(getContext(), "Please insert account number you'd like to delete.", Toast.LENGTH_SHORT).show();
                 }

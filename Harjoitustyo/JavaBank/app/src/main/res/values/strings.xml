@@ -80,4 +80,11 @@
     <string name="linkedBankCardTitle">Linked bank card:</string>
     <string name="creditLimitTitle">Credit limit:</string>
 
+    <string name="card_title">Your cards:</string>
+    <string name="card_update_title">Create or update card</string>
+    <string name="card_delete_title">Delete card</string>
+    <string name="card_nr">CardNumber</string>
+    <string name="card_dailyLimit">Daily limit</string>
+    <string name="linkAccTitle">Linked account:</string>
+
 </resources>
