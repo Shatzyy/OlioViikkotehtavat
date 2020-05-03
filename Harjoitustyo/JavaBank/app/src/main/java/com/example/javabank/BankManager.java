@@ -24,6 +24,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -50,6 +52,16 @@ class BankManager {
     // Singleton for BankManager
     static BankManager getInstance() {
         return bm;
+    }
+
+    // Sets userReference of which user is logged in
+    void setUserRef(String s) {
+        this.userRef = s;
+    }
+
+    // Get userReference
+    String getUserRef() {
+        return userRef;
     }
 
     // Methods for managing accounts
@@ -220,6 +232,32 @@ class BankManager {
         }
     }
 
+
+    // Method for writing account information into CSV -file
+    void writeCSV(final String fname, final String accNr, final Context ct) {
+        db.collection("users").document(userRef).collection("accounts").document(accNr).collection("history").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
+                StringBuilder data = new StringBuilder();
+                data.append("Date,Account,Transaction,Amount");
+                for (QueryDocumentSnapshot doc : value) {
+                    data.append("\n").append(doc.getString("date")).append(",").append(doc.getString("accFrom")).append(",").append(doc.getString("accTo")).append(",").append(doc.getString("amount"));
+                }
+                try {
+                    File rootFolder = ct.getExternalFilesDir(null);
+                    File file = new File(rootFolder, fname);
+                    BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+                    bw.write(data.toString());
+                    bw.close();
+                    Toast.makeText(ct, "File " + fname + " saved to local files.", Toast.LENGTH_SHORT).show();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Toast.makeText(ct, "I/O Error! Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     // Methods for managing bank cards
     ////////////////////////////////////////////////////////////////////////
     void createBankCard() {
@@ -234,7 +272,16 @@ class BankManager {
         //TODO card managing
     }
 
+    ArrayList<String> getBankCardNames() { // TODO database connection
+        ArrayList<String> list = new ArrayList<>();
+        list.add("");
+        list.add("Card 1");
+        return list;
+    }
+
     // Methods for transfers, deposits & withdraws
+    ////////////////////////////////////////////////////////////////////////
+    // Checks is there enough balance or credit limit to do withdraw, updates balance & account history to the database
     void withdrawMoney(final String selectWithdrawAccount, final long withdraw, final Context ct) {
         db.collection("users").document(bm.getUserRef()).collection("accounts").document(selectWithdrawAccount).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -320,6 +367,7 @@ class BankManager {
         });
     }
 
+    // Deposits money to an account & updates account history
     void depositMoney(final String acc, final long amount, final Context ct) {
         db.collection("users").document(userRef).collection("accounts").document(acc).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -359,6 +407,7 @@ class BankManager {
                 });
     }
 
+    // Transfers money between two own accounts & updates account history for both accounts
     void transferMoney(final String accFrom, final String accTo, final long amount, final Context ct) {
         try {
             db.collection("users").document(userRef).collection("accounts").document(accFrom).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -509,115 +558,7 @@ class BankManager {
 
     }
 
-    // Method for writing account information into JSON -file
-    void writeJSON(final String fname, final String accNr, final Context ct) {
-        db.collection("users").document(userRef).collection("accounts").document(accNr).collection("history").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
-                try {
-                    File rootFolder = ct.getExternalFilesDir(null);
-                    File jsonFile = new File(rootFolder, fname);
-                    BufferedWriter bw = new BufferedWriter(new FileWriter(jsonFile));
-                    for (QueryDocumentSnapshot doc : value) {
-                        JSONObject tmp = new JSONObject();
-                        String accTo = doc.getId();
-                        long amt = doc.getLong("amount")/100;
-                        String amount = amt+"€";
-                        String date = doc.getString("date");
-                        tmp.put("accFrom", accNr);
-                        tmp.put("accTo", accTo);
-                        tmp.put("date", date);
-                        tmp.put("amount", amount);
-                        bw.write(tmp.toString());
-                    }
-                    bw.close();
-                } catch (IOException | JSONException ioe) {
-                    Toast.makeText(ct, "I/O error occured! Please try again.", Toast.LENGTH_SHORT).show();
-                    ioe.printStackTrace();
-                }
-            }
-        });
-    }
-
-    ArrayList<String> getBankCardNames() { // TODO database connection
-        ArrayList<String> list = new ArrayList<>();
-        list.add("");
-        list.add("Card 1");
-        return list;
-    }
-
-    void setUserRef(String s) {
-        this.userRef = s;
-    }
-
-    void updateInformation(String name, String address, String phone, final Context ct) {
-        Map<String, Object> tmp = new HashMap<>();
-        if (name.length()!=0) {
-            tmp.put("name", name);
-        }
-        if (address.length()!=0) {
-            tmp.put("address", address);
-        }
-        if (phone.length()!=0) {
-            tmp.put("phone", phone);
-        }
-        db.collection("users").document(userRef).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(ct, "Information updated!", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ct, "Updating information failed!", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    String getUserRef() {
-        return userRef;
-    }
-
-    void updatePassword(final String currPw, final String newPw, final Context ct) {
-        db.collection("users").document(bm.getUserRef()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String salt = task.getResult().getString("salt");
-                        String securePassword = task.getResult().getString("password");
-                        boolean passwordMatch = PasswordUtils.verifyUserPassword(currPw, securePassword, salt);
-                        if(passwordMatch) {
-                            Map<String, Object> tmp = new HashMap<>();
-                            String newSalt = PasswordUtils.getSalt(30);
-                            String newSecurePw = PasswordUtils.generateSecurePassword(newPw, newSalt);
-                            tmp.put("salt", newSalt);
-                            tmp.put("password", newSecurePw);
-                            db.collection("users").document(bm.getUserRef()).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(ct, "Password changed!", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(ct, "Updating password failed!", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } else {
-                            Toast.makeText(ct, "Password incorrect", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(ct, "Username not found", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    System.out.println("ERROR: " + task.getException());
-                }
-            }
-        });
-    }
-
+    // Method for doing external transfer to an external account either in the same bank or different bank
     void externalTransfer(final String transferFrom, final String transferTo, final long amount, final Context ct) {
         try {
             db.collection("users").document(userRef).collection("accounts").document(transferFrom).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -754,5 +695,73 @@ class BankManager {
             Toast.makeText(ct, "Transfer failed! Check your inputs.", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    // Methods for managing user settings
+    ////////////////////////////////////////////////////////////////////////
+    // Method for updating user information
+    void updateInformation(String name, String address, String phone, final Context ct) {
+        Map<String, Object> tmp = new HashMap<>();
+        if (name.length()!=0) {
+            tmp.put("name", name);
+        }
+        if (address.length()!=0) {
+            tmp.put("address", address);
+        }
+        if (phone.length()!=0) {
+            tmp.put("phone", phone);
+        }
+        db.collection("users").document(userRef).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(ct, "Information updated!", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ct, "Updating information failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Method for updating users password
+    void updatePassword(final String currPw, final String newPw, final Context ct) {
+        db.collection("users").document(bm.getUserRef()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String salt = task.getResult().getString("salt");
+                        String securePassword = task.getResult().getString("password");
+                        boolean passwordMatch = PasswordUtils.verifyUserPassword(currPw, securePassword, salt);
+                        if(passwordMatch) {
+                            Map<String, Object> tmp = new HashMap<>();
+                            String newSalt = PasswordUtils.getSalt(30);
+                            String newSecurePw = PasswordUtils.generateSecurePassword(newPw, newSalt);
+                            tmp.put("salt", newSalt);
+                            tmp.put("password", newSecurePw);
+                            db.collection("users").document(bm.getUserRef()).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(ct, "Password changed!", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(ct, "Updating password failed!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            Toast.makeText(ct, "Password incorrect", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(ct, "Username not found", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    System.out.println("ERROR: " + task.getException());
+                }
+            }
+        });
     }
 }

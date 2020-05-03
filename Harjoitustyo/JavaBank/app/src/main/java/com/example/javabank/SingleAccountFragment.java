@@ -121,7 +121,7 @@ public class SingleAccountFragment extends Fragment {
                 if (fName.length()==0) {
                     Toast.makeText(getContext(), "Please insert a file name.", Toast.LENGTH_SHORT).show();
                 } else {
-                    bm.writeJSON(fName, accNr, getContext()); // TODO fix
+                    bm.writeCSV(fName, accNr, getContext());
                     fileName.setText("");
                 }
             }
