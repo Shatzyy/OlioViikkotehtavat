@@ -130,7 +130,12 @@ public class TransferFragment extends Fragment {
                 String acc = selectDepositAccount.getSelectedItem().toString();
                 String am = depositAmount.getText().toString();
                 try {
-                  long amount = Long.parseLong(am);
+                    long amount;
+                    if (am.contains(".") || am.contains(",")) {
+                        amount = Long.parseLong(am.replace(",", "").replace(".", ""));
+                    } else {
+                        amount = Long.parseLong(am)*100;
+                    }
                     bm.depositMoney(acc, amount, getContext());
                     depositAmount.setText("");
                     selectDepositAccount.setSelection(0);
@@ -147,17 +152,28 @@ public class TransferFragment extends Fragment {
                 selectDepositAccount.setSelection(0);
             }
         });
+
         btnAcceptWithdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String withdrawAccount = selectWithdrawAccount.getSelectedItem().toString();
-                String amount = withdrawAmount.getText().toString();
-                bm.withdrawMoney(withdrawAccount, amount, getContext());
-                withdrawAmount.setText("");
-                selectWithdrawAccount.setSelection(0);
+                String acc = selectWithdrawAccount.getSelectedItem().toString();
+                String am = withdrawAmount.getText().toString();
+                try {
+                    long amount;
+                    if (am.contains(".") || am.contains(",")) {
+                        amount = Long.parseLong(am.replace(",", "").replace(".", ""));
+                    } else {
+                        amount = Long.parseLong(am)*100;
+                    }
+                    bm.withdrawMoney(acc, amount, getContext());
+                    withdrawAmount.setText("");
+                    selectWithdrawAccount.setSelection(0);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Deposit failed! Check your inputs.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
         btnDeclineWithdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,6 +181,7 @@ public class TransferFragment extends Fragment {
                 selectWithdrawAccount.setSelection(0);
             }
         });
+
         btnAcceptTransfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,8 +191,23 @@ public class TransferFragment extends Fragment {
                     } else {
                         String transferFrom = selectTransferAccountFrom.getSelectedItem().toString();
                         String transferTo = transferAccountExternal.getText().toString();
-                        String amount = transferAmount.getText().toString();
-                        bm.externalTransfer(transferFrom, transferTo, amount, getContext());
+                        String am = transferAmount.getText().toString();
+                        try {
+                            long amount;
+                            if (am.contains(".") || am.contains(",")) {
+                                amount = Long.parseLong(am.replace(",", "").replace(".", ""));
+                            } else {
+                                amount = Long.parseLong(am)*100;
+                            }
+                            bm.externalTransfer(transferFrom, transferTo, amount, getContext());
+                            selectTransferAccountFrom.setSelection(0);
+                            selectTransferAccountTo.setSelection(0);
+                            transferAmount.setText("");
+                            checkTransferExternal.setChecked(false);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "Transfer failed! Check your inputs.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } else {
                     if (selectTransferAccountFrom.getSelectedItem().toString().equals(selectTransferAccountTo.getSelectedItem().toString())) {
@@ -183,14 +215,26 @@ public class TransferFragment extends Fragment {
                     } else {
                         String transferFrom = selectTransferAccountFrom.getSelectedItem().toString();
                         String transferTo = selectTransferAccountTo.getSelectedItem().toString();
-                        String amount = transferAmount.getText().toString();
-                        bm.transferMoney(transferFrom, transferTo, amount, getContext());
+                        String am = transferAmount.getText().toString();
+                        try {
+                            long amount;
+                            if (am.contains(".") || am.contains(",")) {
+                                amount = Long.parseLong(am.replace(",", "").replace(".", ""));
+                            } else {
+                                amount = Long.parseLong(am)*100;
+                            }
+                            bm.transferMoney(transferFrom, transferTo, amount, getContext());
+                            selectTransferAccountFrom.setSelection(0);
+                            selectTransferAccountTo.setSelection(0);
+                            transferAmount.setText("");
+                            checkTransferExternal.setChecked(false);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "Transfer failed! Check your inputs.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
-                selectTransferAccountFrom.setSelection(0);
-                selectTransferAccountTo.setSelection(0);
-                transferAmount.setText("");
-                checkTransferExternal.setChecked(false);
+
             }
         });
 

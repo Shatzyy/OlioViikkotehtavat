@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -32,7 +31,7 @@ import java.util.Objects;
 
 public class AccountFragment extends Fragment {
     // Initialize DB
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     // Initialize BankManager
     private BankManager bm = BankManager.getInstance();
 

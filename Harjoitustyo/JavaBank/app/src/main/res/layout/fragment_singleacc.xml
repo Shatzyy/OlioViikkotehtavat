@@ -1,14 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="8dp">
 
-    <TextView
-        android:id="@+id/text123"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/returnViewBtn"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:background="@drawable/ic_back"
+        android:layout_marginBottom="4dp"/>
+
+    <RelativeLayout
+        android:id="@+id/account_info_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fragment single account"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
+        android:layout_below="@+id/returnViewBtn"
+        android:padding="8dp"
+        android:background="@drawable/textview_border"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+        android:id="@+id/history_accNr"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="@string/account_nr"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:id="@+id/history_balance"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="@string/account_balance"
+            android:layout_toEndOf="@+id/history_accNr"
+            android:layout_alignParentTop="true"
+            android:gravity="end"
+            android:textSize="20sp"
+            android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:id="@+id/titleCreditLimit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/creditLimitTitle"
+            android:layout_below="@+id/history_accNr"
+            android:textSize="20sp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:id="@+id/history_creditLimit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/history_accNr"
+            android:layout_toEndOf="@+id/titleCreditLimit"
+            android:textSize="20sp"
+            android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:id="@+id/titleBankCardLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/linkedBankCardTitle"
+            android:layout_below="@+id/titleCreditLimit"
+            android:textSize="20sp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:id="@+id/history_bankCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleCreditLimit"
+            android:layout_toEndOf="@+id/titleBankCardLink"
+            android:textSize="20sp"
+            android:textColor="@color/colorBlack" />
+
+    </RelativeLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/showHistory"
+            android:layout_width="match_parent"
+            android:layout_height="315dp"
+            android:padding="8dp"
+            android:layout_below="@+id/account_info_container"
+            android:gravity="center"
+            android:background="@drawable/textview_border"
+            android:layout_marginBottom="10dp"/>
+
+    <RelativeLayout
+        android:id="@+id/saveFile_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/showHistory"
+        android:background="@drawable/textview_border"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/showFileTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fileTitle"
+            android:layout_centerHorizontal="true"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"/>
+
+        <EditText
+            android:id="@+id/fileName"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/showFileTitle"
+            android:layout_centerHorizontal="true"
+            android:hint="@string/fileName"
+            android:autofillHints="@string/fileName"
+            android:gravity="center"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/printFileBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fileName"
+            android:layout_centerHorizontal="true"
+            android:text="@string/printFileBtn"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -71,5 +71,13 @@
     <string name="amount">Amount</string>
     <string name="selectTransferType">Transfer to an external account?</string>
 
+    <string name="history_date">Date</string>
+
+    <string name="fileTitle">Save account history in a local file</string>
+    <string name="fileName">Give a file name</string>
+    <string name="printFileBtn">Save to file</string>
+
+    <string name="linkedBankCardTitle">Linked bank card:</string>
+    <string name="creditLimitTitle">Credit limit:</string>
 
 </resources>

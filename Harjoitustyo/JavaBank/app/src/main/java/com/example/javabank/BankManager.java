@@ -10,55 +10,52 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 // Class for managing all Bank activities
-public class BankManager {
+class BankManager {
     // Single instance of BankManager allowed
     private static final BankManager bm = new BankManager();
     // Initialize Database connection
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String userRef = "";
-    public BankManager () {
-
+    private BankManager () {
+        // Empty constructor required
     }
 
     // Singleton for BankManager
-    public static BankManager getInstance() {
+    static BankManager getInstance() {
         return bm;
     }
 
-
     // Methods for managing accounts
-    public boolean createDebitAccount(String acc, String bal) {
-        try {
-            long balance = Long.parseLong(bal);
-            Account tmp = new DebitAccount(acc, balance, userRef);
-            db.collection("users").document(userRef).collection("accounts").document(acc).set(tmp);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public void deleteAccount(String acc) {
+    ////////////////////////////////////////////////////////////////////////
+    // Finds account and deletes it & card links assosiated with the account
+    void deleteAccount(String acc) {
         db.collection("users").document(userRef).collection("accounts").document(acc).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -86,7 +83,8 @@ public class BankManager {
 
     }
 
-    public void createUpdateAccount(final String acc, String credLim, final String linkCard, final Context ct) {
+    // Checks does the given account exist, if it does, updates creditLimit & cardLink, if doesn't, creates the account
+    void createUpdateAccount(final String acc, String credLim, final String linkCard, final Context ct) {
         try {
             final long cLim;
             if (credLim.length()==0) {
@@ -197,6 +195,17 @@ public class BankManager {
                                 }
                             });
                         }
+                        if (linkCard.length()!=0) {
+                            Map<String, Object> tmp = new HashMap<>();
+                            tmp.put("accountNr", acc);
+                            tmp.put("linkedCard", linkCard);
+                            db.collection("users").document(userRef).collection("cardLinks").document(acc).set(tmp, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    System.out.println("Card link updated!");
+                                }
+                            });
+                        }
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -212,20 +221,21 @@ public class BankManager {
     }
 
     // Methods for managing bank cards
-    public void createBankCard() {
+    ////////////////////////////////////////////////////////////////////////
+    void createBankCard() {
         //TODO card managing
     }
 
-    public void deleteBankCard() {
+    void deleteBankCard() {
         //TODO card managing
     }
 
-    public void updateBankCard() {
+    void updateBankCard() {
         //TODO card managing
     }
 
     // Methods for transfers, deposits & withdraws
-    public void withdrawMoney(final String selectWithdrawAccount, final String withdrawAmount, final Context ct) {
+    void withdrawMoney(final String selectWithdrawAccount, final long withdraw, final Context ct) {
         db.collection("users").document(bm.getUserRef()).collection("accounts").document(selectWithdrawAccount).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -233,15 +243,24 @@ public class BankManager {
                 if (task.getResult().contains("creditLimit")) {
                     try {
                         Long creditLimit = task.getResult().getLong("creditLimit");
-                        final long withdraw = Long.parseLong(withdrawAmount);
-                        if ((creditLimit+balance)>=(100*withdraw)) {
-                            balance = balance - (100*withdraw);
+                        if ((creditLimit+balance)>=withdraw) {
+                            balance = balance - withdraw;
                             Map<String, Object> tmp = new HashMap<>();
                             tmp.put("balance", balance);
                             db.collection("users").document(bm.getUserRef()).collection("accounts").document(selectWithdrawAccount).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(ct, "Withdraw successful! " + withdraw + "$ taken from the account.", Toast.LENGTH_SHORT).show();
+                                    BigDecimal amt = BigDecimal.valueOf(withdraw, 2);
+                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                    Toast.makeText(ct, "Withdraw successful! " + formatter.format(amt) + " taken from the account.", Toast.LENGTH_SHORT).show();
+                                    Map<String, Object> tmp = new HashMap<>();
+                                    String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                    String amountString = formatter.format(amt.negate());
+                                    tmp.put("accFrom", selectWithdrawAccount);
+                                    tmp.put("accTo", "Withdraw");
+                                    tmp.put("date", currentDate);
+                                    tmp.put("amount", amountString);
+                                    db.collection("users").document(userRef).collection("accounts").document(selectWithdrawAccount).collection("history").document().set(tmp);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -259,15 +278,24 @@ public class BankManager {
 
                 } else {
                     try {
-                        final long withdraw = Long.parseLong(withdrawAmount);
-                        if (balance>=(100*withdraw)) {
-                            balance = balance - (100*withdraw);
+                        if (balance>=withdraw) {
+                            balance = balance - withdraw;
                             Map<String, Object> tmp = new HashMap<>();
                             tmp.put("balance", balance);
                             db.collection("users").document(bm.getUserRef()).collection("accounts").document(selectWithdrawAccount).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(ct, "Withdraw successful! " + withdraw + "$ taken from the account.", Toast.LENGTH_SHORT).show();
+                                    BigDecimal amt = BigDecimal.valueOf(withdraw, 2);
+                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                    Toast.makeText(ct, "Withdraw successful! " + formatter.format(amt) + " taken from the account.", Toast.LENGTH_SHORT).show();
+                                    Map<String, Object> tmp = new HashMap<>();
+                                    String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                    String amountString = formatter.format(amt.negate());
+                                    tmp.put("accFrom", selectWithdrawAccount);
+                                    tmp.put("accTo", "Withdraw");
+                                    tmp.put("date", currentDate);
+                                    tmp.put("amount", amountString);
+                                    db.collection("users").document(userRef).collection("accounts").document(selectWithdrawAccount).collection("history").document().set(tmp);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -292,20 +320,30 @@ public class BankManager {
         });
     }
 
-    public void depositMoney(final String acc, final long bal, final Context ct) {
+    void depositMoney(final String acc, final long amount, final Context ct) {
         db.collection("users").document(userRef).collection("accounts").document(acc).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         try {
-                            long currBal = Objects.requireNonNull(task.getResult()).getLong("balance");
-                            currBal = currBal + (bal*100);
+                            long currBal = task.getResult().getLong("balance");
+                            currBal = currBal + amount;
                             Map<String, Object> tmp = new HashMap<>();
                             tmp.put("balance", currBal);
                             db.collection("users").document(userRef).collection("accounts").document(acc).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(ct, "Deposit completed!", Toast.LENGTH_SHORT).show();
+                                    BigDecimal amt = BigDecimal.valueOf(amount, 2);
+                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                    Toast.makeText(ct, "Deposit completed! " + formatter.format(amt) + " deposited to the account.", Toast.LENGTH_SHORT).show();
+                                    Map<String, Object> tmp = new HashMap<>();
+                                    String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                    String amountString = formatter.format(amt);
+                                    tmp.put("accFrom", acc);
+                                    tmp.put("accTo", "Deposit");
+                                    tmp.put("date", currentDate);
+                                    tmp.put("amount", amountString);
+                                    db.collection("users").document(userRef).collection("accounts").document(acc).collection("history").document().set(tmp);
                                 }
                             });
                         } catch (Exception e) {
@@ -321,9 +359,8 @@ public class BankManager {
                 });
     }
 
-    public void transferMoney(final String accFrom, final String accTo, String amt, final Context ct) {
+    void transferMoney(final String accFrom, final String accTo, final long amount, final Context ct) {
         try {
-            final long amount = (Long.parseLong(amt)*100);
             db.collection("users").document(userRef).collection("accounts").document(accFrom).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -353,7 +390,29 @@ public class BankManager {
                                                             db.collection("users").document(userRef).collection("accounts").document(accTo).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                    Toast.makeText(ct, "Transfer successful!", Toast.LENGTH_SHORT).show();
+                                                                    BigDecimal amt = BigDecimal.valueOf(amount, 2);
+                                                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                                                    Toast.makeText(ct, "Transfer successful! " + formatter.format(amt) + " transferred to " + accTo + "!", Toast.LENGTH_SHORT).show();
+
+                                                                    // Set transfer history to account from which the transfer was made
+                                                                    Map<String, Object> tmp1 = new HashMap<>();
+                                                                    String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                                                    String amountString = formatter.format(amt.negate());
+                                                                    tmp1.put("accFrom", accFrom);
+                                                                    tmp1.put("accTo", accTo);
+                                                                    tmp1.put("date", currentDate);
+                                                                    tmp1.put("amount", amountString);
+                                                                    db.collection("users").document(userRef).collection("accounts").document(accFrom).collection("history").document().set(tmp1);
+
+                                                                    // Set transfer history to account to which the transfer was made
+                                                                    Map<String, Object> tmp2 = new HashMap<>();
+                                                                    String currentDate2 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                                                    String amountString2 = formatter.format(amt);
+                                                                    tmp2.put("accFrom", accTo);
+                                                                    tmp2.put("accTo", accFrom);
+                                                                    tmp2.put("date", currentDate2);
+                                                                    tmp2.put("amount", amountString2);
+                                                                    db.collection("users").document(userRef).collection("accounts").document(accTo).collection("history").document().set(tmp2);
                                                                 }
                                                             });
                                                         } else {
@@ -393,7 +452,29 @@ public class BankManager {
                                                             db.collection("users").document(userRef).collection("accounts").document(accTo).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                    Toast.makeText(ct, "Transfer successful!", Toast.LENGTH_SHORT).show();
+                                                                    BigDecimal amt = BigDecimal.valueOf(amount, 2);
+                                                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                                                    Toast.makeText(ct, "Transfer successful! " + formatter.format(amt) + " transferred to " + accTo + "!", Toast.LENGTH_SHORT).show();
+
+                                                                    // Set transfer history to account from which the transfer was made
+                                                                    Map<String, Object> tmp1 = new HashMap<>();
+                                                                    String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                                                    String amountString = formatter.format(amt.negate());
+                                                                    tmp1.put("accFrom", accFrom);
+                                                                    tmp1.put("accTo", accTo);
+                                                                    tmp1.put("date", currentDate);
+                                                                    tmp1.put("amount", amountString);
+                                                                    db.collection("users").document(userRef).collection("accounts").document(accFrom).collection("history").document().set(tmp1);
+
+                                                                    // Set transfer history to account to which the transfer was made
+                                                                    Map<String, Object> tmp2 = new HashMap<>();
+                                                                    String currentDate2 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                                                    String amountString2 = formatter.format(amt);
+                                                                    tmp2.put("accFrom", accTo);
+                                                                    tmp2.put("accTo", accFrom);
+                                                                    tmp2.put("date", currentDate2);
+                                                                    tmp2.put("amount", amountString2);
+                                                                    db.collection("users").document(userRef).collection("accounts").document(accTo).collection("history").document().set(tmp2);
                                                                 }
                                                             });
                                                         } else {
@@ -429,22 +510,47 @@ public class BankManager {
     }
 
     // Method for writing account information into JSON -file
-    public void writeJSON(String fname) {
-        // TODO Write JSON
+    void writeJSON(final String fname, final String accNr, final Context ct) {
+        db.collection("users").document(userRef).collection("accounts").document(accNr).collection("history").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
+                try {
+                    File rootFolder = ct.getExternalFilesDir(null);
+                    File jsonFile = new File(rootFolder, fname);
+                    BufferedWriter bw = new BufferedWriter(new FileWriter(jsonFile));
+                    for (QueryDocumentSnapshot doc : value) {
+                        JSONObject tmp = new JSONObject();
+                        String accTo = doc.getId();
+                        long amt = doc.getLong("amount")/100;
+                        String amount = amt+"€";
+                        String date = doc.getString("date");
+                        tmp.put("accFrom", accNr);
+                        tmp.put("accTo", accTo);
+                        tmp.put("date", date);
+                        tmp.put("amount", amount);
+                        bw.write(tmp.toString());
+                    }
+                    bw.close();
+                } catch (IOException | JSONException ioe) {
+                    Toast.makeText(ct, "I/O error occured! Please try again.", Toast.LENGTH_SHORT).show();
+                    ioe.printStackTrace();
+                }
+            }
+        });
     }
 
-    public ArrayList<String> getBankCardNames() { // TODO database connection
+    ArrayList<String> getBankCardNames() { // TODO database connection
         ArrayList<String> list = new ArrayList<>();
         list.add("");
         list.add("Card 1");
         return list;
     }
 
-    public void setUserRef(String s) {
+    void setUserRef(String s) {
         this.userRef = s;
     }
 
-    public void updateInformation(String name, String address, String phone, final Context ct) {
+    void updateInformation(String name, String address, String phone, final Context ct) {
         Map<String, Object> tmp = new HashMap<>();
         if (name.length()!=0) {
             tmp.put("name", name);
@@ -468,11 +574,11 @@ public class BankManager {
         });
     }
 
-    public String getUserRef() {
+    String getUserRef() {
         return userRef;
     }
 
-    public void updatePassword(final String currPw, final String newPw, final Context ct) {
+    void updatePassword(final String currPw, final String newPw, final Context ct) {
         db.collection("users").document(bm.getUserRef()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -512,9 +618,8 @@ public class BankManager {
         });
     }
 
-    public void externalTransfer(final String transferFrom, final String transferTo, String amt, final Context ct) {
+    void externalTransfer(final String transferFrom, final String transferTo, final long amount, final Context ct) {
         try {
-            final Long amount = Long.parseLong(amt)*100;
             db.collection("users").document(userRef).collection("accounts").document(transferFrom).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -540,20 +645,54 @@ public class BankManager {
                                                     tester--;
                                                     long oldBal = doc.getLong("balance");
                                                     long newBal = oldBal + amount;
-                                                    String owner = doc.getString("ownerID");
+                                                    final String owner = doc.getString("ownerID");
                                                     String docId = doc.getId();
-                                                    System.out.println(docId + owner);
-                                                    Map<String, Object> tmp = new HashMap<>();
+                                                    final Map<String, Object> tmp = new HashMap<>();
                                                     tmp.put("balance", newBal);
                                                     db.collection("users").document(owner).collection("accounts").document(docId).set(tmp, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                            Toast.makeText(ct, "Transfer done to an existing bank account in our system!", Toast.LENGTH_SHORT).show();
+                                                            BigDecimal amt = BigDecimal.valueOf(amount, 2);
+                                                            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                                            Toast.makeText(ct, "Transfer of " + formatter.format(amt) + " successfully done to " + transferTo + "!", Toast.LENGTH_SHORT).show();
+
+                                                            // Set transfer history to account from which transfer was made
+                                                            Map<String, Object> tmp1 = new HashMap<>();
+                                                            String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                                            String amountString1 = formatter.format(amt.negate());
+                                                            tmp1.put("accFrom", transferFrom);
+                                                            tmp1.put("accTo", transferTo);
+                                                            tmp1.put("date", currentDate);
+                                                            tmp1.put("amount", amountString1);
+                                                            db.collection("users").document(userRef).collection("accounts").document(transferFrom).collection("history").document().set(tmp1);
+
+                                                            // Set transfer history to account to which transfer was made
+                                                            Map<String, Object> tmp2 = new HashMap<>();
+                                                            String amountString2 = formatter.format(amt);
+                                                            tmp2.put("accFrom", transferTo);
+                                                            tmp2.put("accTo", transferFrom);
+                                                            tmp2.put("date", currentDate);
+                                                            tmp2.put("amount", amountString2);
+                                                            db.collection("users").document(owner).collection("accounts").document(transferTo).collection("history").document().set(tmp2);
+
+
                                                         }
                                                     });
                                                 }
                                                 if(tester==docs.size()) {
-                                                    Toast.makeText(ct, "Transfer done as a payment!", Toast.LENGTH_SHORT).show();
+                                                    BigDecimal amt = BigDecimal.valueOf(amount, 2);
+                                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                                    Toast.makeText(ct, "Payment of " + formatter.format(amt) + " successfully done to " + transferTo + "!", Toast.LENGTH_SHORT).show();
+
+                                                    // Set transfer history
+                                                    Map<String, Object> tmp = new HashMap<>();
+                                                    String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                                    String amountString = formatter.format(amt.negate());
+                                                    tmp.put("accFrom", transferFrom);
+                                                    tmp.put("accTo", transferTo);
+                                                    tmp.put("date", currentDate);
+                                                    tmp.put("amount", amountString);
+                                                    db.collection("users").document(userRef).collection("accounts").document(transferFrom).collection("history").document().set(tmp);
                                                 }
                                             }
                                         }
