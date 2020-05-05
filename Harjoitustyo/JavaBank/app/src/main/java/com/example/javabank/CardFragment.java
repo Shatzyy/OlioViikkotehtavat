@@ -68,6 +68,8 @@ public class CardFragment extends Fragment {
                         long limit;
                         if (cardLimit.contains(".") || cardLimit.contains(",")) {
                             limit = Long.parseLong(cardLimit.replace(",", "").replace(".", ""));
+                        } else if (cardLimit.length()==0) {
+                            limit = 0;
                         } else {
                             limit = Long.parseLong(cardLimit)*100;
                         }
@@ -116,14 +118,14 @@ public class CardFragment extends Fragment {
                     String cardNr = "";
                     String accNr = "";
                     String limit = "";
-                    if (doc.contains("linkedCard")) {
-                        cardNr = doc.getString("linkedCard");
+                    if (doc.contains("accId")) {
+                        accNr = doc.getString("accId");
                     }
-                    if (doc.contains("accountNr")) {
-                        accNr = doc.getString("accountNr");
+                    if (doc.contains("cardId")) {
+                        cardNr = doc.getString("cardId");
                     }
-                    if (doc.contains("limit")) {
-                        limit = doc.getString("limit");
+                    if (doc.contains("dailyLimit")) {
+                        limit = doc.getString("dailyLimit");
                     }
                     Card tmp = new Card(cardNr, accNr, limit);
                     cardList.add(tmp);
@@ -146,9 +148,12 @@ public class CardFragment extends Fragment {
                     accList.add(acc);
                 }
                 // Set adapter for Spinner for showing accounts
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, accList);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                updateAccLink.setAdapter(adapter);
+                try {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, accList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    updateAccLink.setAdapter(adapter);
+                } catch (Exception ignore) {
+                }
             }
         });
     }

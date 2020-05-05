@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +25,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class AccountFragment extends Fragment {
     // Initialize DB
@@ -57,25 +54,7 @@ public class AccountFragment extends Fragment {
 
         // Other
         final CheckBox checkCredit = view.findViewById(R.id.creditCheck);
-        final Spinner spin = view.findViewById(R.id.updateAccBankCard);
         final RecyclerView showAccounts = view.findViewById(R.id.showAccounts);
-
-        // Set realtime listener for database for showing cards in spinner
-        db.collection("users").document(bm.getUserRef()).collection("cards").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
-                final ArrayList<String> cardList = new ArrayList<>();
-                // Create cardList from database query
-                for (QueryDocumentSnapshot doc : value) {
-                    String card = doc.getId();
-                    cardList.add(card);
-                }
-                // Set adapter for Spinner for showing accounts
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, cardList);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spin.setAdapter(adapter);
-            }
-        });
 
         // Set realtime listener for database
         db.collection("users").document(bm.getUserRef()).collection("accounts").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -127,12 +106,10 @@ public class AccountFragment extends Fragment {
             public void onClick(View v) {
                 String accNr = updateAcc_accNr.getText().toString();
                 String credLim = updateAcc_creditLimit.getText().toString();
-                String cardLink = spin.getSelectedItem().toString();
                 if (updateAcc_accNr.getText().toString().length()!=0) {
-                    bm.createUpdateAccount(accNr, credLim, cardLink, getContext());
+                    bm.createUpdateAccount(accNr, credLim, getContext());
                     updateAcc_accNr.setText("");
                     updateAcc_creditLimit.setText("");
-                    spin.setSelection(0);
                 } else {
                     Toast.makeText(getContext(), "Please insert account number.", Toast.LENGTH_SHORT).show();
                 }
@@ -146,7 +123,6 @@ public class AccountFragment extends Fragment {
                 updateAcc_accNr.setText("");
                 updateAcc_creditLimit.setText("");
                 checkCredit.setChecked(false);
-                spin.setSelection(0);
             }
         });
 

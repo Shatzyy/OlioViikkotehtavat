@@ -45,6 +45,7 @@ public class Register extends AppCompatActivity {
                         Toast.makeText(Register.this, "Account created! Please login.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Register.this, Login.class);
                         startActivity(intent);
+                        finish();
                     }
                 });
             } else {
@@ -58,6 +59,7 @@ public class Register extends AppCompatActivity {
     public void loadLogin(View v) {
         Intent intent = new Intent(Register.this, Login.class);
         startActivity(intent);
+        finish();
     }
 
     public void cancelRegister(View v) {

@@ -12,15 +12,15 @@ public class Card {
         this.dailyLimit = dLim;
     }
 
-    String getCardId() {
+   public String getCardId() {
         return cardId;
     }
 
-    String getAccId() {
+   public String getAccId() {
         return accId;
     }
 
-    String getDailyLimit() {
+   public String getDailyLimit() {
         return dailyLimit;
     }
 }

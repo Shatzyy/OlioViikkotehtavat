@@ -77,12 +77,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountFragment()).commit();
                 break;
 
-            case R.id.nav_transfers:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransferFragment()).commit();
-                break;
-
-            case R.id.nav_payments:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new PaymentFragment()).commit();
+            case R.id.nav_transactions:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionFragment()).commit();
                 break;
 
             case R.id.nav_cards:

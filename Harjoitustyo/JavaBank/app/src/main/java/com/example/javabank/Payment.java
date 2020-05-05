@@ -30,5 +30,4 @@ public class Payment {
         return amount;
     }
 
-
 }

@@ -88,7 +88,7 @@ public class SingleAccountFragment extends Fragment {
                     return;
                 }
                 if (documentSnapshot != null && documentSnapshot.exists()) {
-                    String card = documentSnapshot.getString("linkedCard");
+                    String card = documentSnapshot.getString("cardId");
                     linkCard.setText(card);
                 } else {
                     System.out.println("Current data: null");

@@ -27,6 +27,7 @@ public class Login extends AppCompatActivity implements MyDialog.MyDialogListene
     public void loadRegister(View v) {
         Intent intent = new Intent(Login.this, Register.class);
         startActivity(intent);
+        finish();
     }
 
     public void login(View v) {
@@ -74,6 +75,7 @@ public class Login extends AppCompatActivity implements MyDialog.MyDialogListene
             intent.putExtra("userRef", user.getText().toString());
             Toast.makeText(this, "Logged in!", Toast.LENGTH_SHORT).show();
             startActivity(intent);
+            finish();
         } else {
             user.setText("");
             pass.setText("");

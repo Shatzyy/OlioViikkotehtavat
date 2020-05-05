@@ -19,7 +19,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/showAccounts"
         android:layout_width="match_parent"
-        android:layout_height="231dp"
+        android:layout_height="285dp"
         android:padding="8dp"
         android:layout_below="@+id/acc_title"
         android:gravity="center"
@@ -55,27 +55,10 @@
             android:autofillHints="@string/account_nr"/>
 
         <TextView
-            android:id="@+id/linkCardTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/updateAccNr"
-            android:text="@string/linkCardTitle"
-            android:textSize="20sp"
-            android:layout_marginBottom="4dp" />
-
-        <Spinner
-            android:id="@+id/updateAccBankCard"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/updateAccNr"
-            android:layout_toEndOf="@+id/linkCardTitle"
-            android:gravity="center"/>
-
-        <TextView
             android:id="@+id/creditAccTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linkCardTitle"
+            android:layout_below="@+id/updateAccNr"
             android:textSize="20sp"
             android:text="@string/account_add_credit"/>
 
@@ -84,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/creditAccTitle"
-            android:layout_below="@+id/linkCardTitle"
+            android:layout_below="@+id/updateAccNr"
             android:checked="false"/>
 
         <EditText
