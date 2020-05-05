@@ -656,7 +656,7 @@ class BankManager {
                                                     tester--;
                                                     long oldBal = doc.getLong("balance");
                                                     long newBal = oldBal + amount;
-                                                    String owner = doc.getString("ownerID");
+                                                    final String owner = doc.getString("ownerID");
                                                     String docId = doc.getId();
                                                     System.out.println(docId + owner);
                                                     Map<String, Object> tmp = new HashMap<>();
@@ -665,11 +665,44 @@ class BankManager {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             Toast.makeText(ct, "Transfer done to an existing bank account in our system!", Toast.LENGTH_SHORT).show();
+
+                                                            // Set transfer history to account from which transfer was made
+                                                            Map<String, Object> tmp = new HashMap<>();
+                                                            BigDecimal amt = BigDecimal.valueOf(amount, 2);
+                                                            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                                            String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                                            String amountString = formatter.format(amt.negate());
+                                                            tmp.put("accFrom", transferFrom);
+                                                            tmp.put("accTo", transferTo);
+                                                            tmp.put("date", currentDate);
+                                                            tmp.put("amount", amountString);
+                                                            db.collection("users").document(userRef).collection("accounts").document(transferFrom).collection("history").document().set(tmp);
+
+                                                            // Set transfer history to account to which transfer was made
+                                                            Map<String, Object> tmp2 = new HashMap<>();
+                                                            String amountString2 = formatter.format(amt);
+                                                            tmp2.put("accFrom", transferTo);
+                                                            tmp2.put("accTo", transferFrom);
+                                                            tmp2.put("date", currentDate);
+                                                            tmp2.put("amount", amountString2);
+                                                            db.collection("users").document(owner).collection("accounts").document(transferTo).collection("history").document().set(tmp2);
                                                         }
                                                     });
                                                 }
                                                 if(tester==docs.size()) {
                                                     Toast.makeText(ct, "Transfer done as a payment!", Toast.LENGTH_SHORT).show();
+
+                                                    // Set transfer history
+                                                    Map<String, Object> tmp = new HashMap<>();
+                                                    BigDecimal amt = BigDecimal.valueOf(amount, 2);
+                                                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+                                                    String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
+                                                    String amountString = formatter.format(amt.negate());
+                                                    tmp.put("accFrom", transferFrom);
+                                                    tmp.put("accTo", transferTo);
+                                                    tmp.put("date", currentDate);
+                                                    tmp.put("amount", amountString);
+                                                    db.collection("users").document(userRef).collection("accounts").document(transferFrom).collection("history").document().set(tmp);
                                                 }
                                             }
                                         }

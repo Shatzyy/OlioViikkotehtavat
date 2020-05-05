@@ -86,4 +86,7 @@
     <string name="card_dailyLimit">Daily limit</string>
     <string name="linkAccTitle">Linked account:</string>
 
+    <string name="main_support">Feel free to contact our 24/7 customer support at support@javabank.com or call us 0200 020 020</string>
+    <string name="main_navhelper">Please use toolbar navigation menu for switching between views</string>
+
 </resources>

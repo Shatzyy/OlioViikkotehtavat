@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBlue"
+    android:padding="8dp">
 
     <TextView
-        android:id="@+id/text123"
+        android:id="@+id/welcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/navHelper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fragment main"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
+        android:layout_below="@+id/welcome"
+        android:layout_marginBottom="20dp"
+        android:textSize="24sp"
+        android:text="@string/main_navhelper"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/support"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_pic"
+        android:textSize="24sp"
+        android:text="@string/main_support"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"/>
+
+    <ImageView
+        android:id="@+id/main_pic"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/background_main"
+        android:layout_below="@+id/navHelper"/>
 
 </RelativeLayout>
