@@ -64,7 +64,7 @@ public class TransactionFragment extends Fragment {
         // Other
         final CheckBox checkTransferExternal = view.findViewById(R.id.selectOutsideTransfer);
 
-        // Set checkbox listener
+        // Set checkbox listener for toggling view visibility
         checkTransferExternal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -104,6 +104,7 @@ public class TransactionFragment extends Fragment {
                     } catch (Exception ignored) {
                     }
                 } else {
+                    // If data is null, clear list & shows empty spinner
                     System.out.println("Current data: null");
                     spinnerList.clear();
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, spinnerList);
@@ -117,6 +118,7 @@ public class TransactionFragment extends Fragment {
         });
 
         // Set onClick listeners to buttons
+        // Tests input field validity & calls for BankManager method for depositing money
         btnAcceptDeposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,6 +140,8 @@ public class TransactionFragment extends Fragment {
                 }
             }
         });
+
+        // Decline clears input fields
         btnDeclineDeposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +150,7 @@ public class TransactionFragment extends Fragment {
             }
         });
 
+        // Tests input field validity & calls for BankManager method for doing a withdraw
         btnAcceptWithdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +172,8 @@ public class TransactionFragment extends Fragment {
                 }
             }
         });
+
+        // Decline clears input fields
         btnDeclineWithdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +182,7 @@ public class TransactionFragment extends Fragment {
             }
         });
 
+        // Checks is the transfer external or to own account, tests field validity & calls for BankManager method for handling database requests and do the transfer
         btnAcceptTransfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,6 +239,7 @@ public class TransactionFragment extends Fragment {
             }
         });
 
+        // Decline clears input fields
         btnDeclineTransfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

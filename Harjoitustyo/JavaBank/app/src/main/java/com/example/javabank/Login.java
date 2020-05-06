@@ -24,12 +24,14 @@ public class Login extends AppCompatActivity implements MyDialog.MyDialogListene
         setContentView(R.layout.activity_login);
     }
 
+    // Method for loading register view
     public void loadRegister(View v) {
         Intent intent = new Intent(Login.this, Register.class);
         startActivity(intent);
         finish();
     }
 
+    // Checks does the hashed password in database match given password which is hashed with the same salt. If it does, calls for two-factor authentication dialog
     public void login(View v) {
         final EditText user = findViewById(R.id.LoginUserName);
         final EditText pass = findViewById(R.id.LoginPassword);
@@ -59,6 +61,7 @@ public class Login extends AppCompatActivity implements MyDialog.MyDialogListene
         });
     }
 
+    // Decline clears input fields
     public void cancelLogin(View v) {
         EditText user = findViewById(R.id.LoginUserName);
         EditText pass = findViewById(R.id.LoginPassword);
@@ -66,6 +69,7 @@ public class Login extends AppCompatActivity implements MyDialog.MyDialogListene
         pass.setText("");
     }
 
+    // Method for loading MainActivity after password check & two-factor authentication are completed
     @Override
     public void loadMainActivity(boolean b) {
         EditText user = findViewById(R.id.LoginUserName);

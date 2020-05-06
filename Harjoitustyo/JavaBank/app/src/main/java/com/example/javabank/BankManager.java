@@ -43,24 +43,24 @@ class BankManager {
     }
 
     // Singleton for BankManager
-    static BankManager getInstance() {
+    public static BankManager getInstance() {
         return bm;
     }
 
     // Sets userReference of which user is logged in
-    void setUserRef(String s) {
+    public void setUserRef(String s) {
         this.userRef = s;
     }
 
     // Get userReference
-    String getUserRef() {
+    public String getUserRef() {
         return userRef;
     }
 
     // Methods for managing accounts
     ////////////////////////////////////////////////////////////////////////
     // Finds account and deletes it & card links assosiated with the account
-    void deleteAccount(String acc, final Context ct) {
+    public void deleteAccount(String acc, final Context ct) {
         db.collection("users").document(userRef).collection("accounts").document(acc).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -89,7 +89,7 @@ class BankManager {
     }
 
     // Checks does the given account exist, if it does, updates creditLimit & cardLink, if doesn't, creates the account
-    void createUpdateAccount(final String acc, String credLim, final Context ct) {
+    public void createUpdateAccount(final String acc, String credLim, final Context ct) {
         try {
             final long cLim;
             if (credLim.length()==0) {
@@ -164,7 +164,7 @@ class BankManager {
 
 
     // Method for writing account information into CSV -file
-    void writeCSV(final String fName, final String accNr, final Context ct) {
+    public void writeCSV(final String fName, final String accNr, final Context ct) {
         db.collection("users").document(userRef).collection("accounts").document(accNr).collection("history").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
@@ -191,7 +191,7 @@ class BankManager {
     // Methods for managing bank cards
     ////////////////////////////////////////////////////////////////////////
     // Checks does the given card exist, if it does, updates daily limit & cardLink, if doesn't, creates the card
-    void createUpdateBankCard(final String card, final String acc, final long limit, final Context ct) {
+    public void createUpdateBankCard(final String card, final String acc, final long limit, final Context ct) {
         db.collection("users").document(userRef).collection("cardLinks").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot value) {
@@ -246,7 +246,8 @@ class BankManager {
         });
     }
 
-    void deleteBankCard(final String card, final Context ct) {
+    // Deletes bank card if found in database
+    public void deleteBankCard(final String card, final Context ct) {
         db.collection("users").document(userRef).collection("cardLinks").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
@@ -275,7 +276,7 @@ class BankManager {
     // Methods for transfers, deposits & withdraws
     ////////////////////////////////////////////////////////////////////////
     // Checks is there enough balance or credit limit to do withdraw, updates balance & account history to the database
-    void withdrawMoney(final String selectWithdrawAccount, final long withdraw, final Context ct) {
+    public void withdrawMoney(final String selectWithdrawAccount, final long withdraw, final Context ct) {
         db.collection("users").document(bm.getUserRef()).collection("accounts").document(selectWithdrawAccount).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -361,7 +362,7 @@ class BankManager {
     }
 
     // Deposits money to an account & updates account history
-    void depositMoney(final String acc, final long amount, final Context ct) {
+    public void depositMoney(final String acc, final long amount, final Context ct) {
         db.collection("users").document(userRef).collection("accounts").document(acc).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -401,7 +402,7 @@ class BankManager {
     }
 
     // Transfers money between two own accounts & updates account history for both accounts
-    void transferMoney(final String accFrom, final String accTo, final long amount, final Context ct) {
+    public void transferMoney(final String accFrom, final String accTo, final long amount, final Context ct) {
         try {
             db.collection("users").document(userRef).collection("accounts").document(accFrom).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -552,7 +553,7 @@ class BankManager {
     }
 
     // Method for doing external transfer to an external account either in the same bank or different bank
-    void externalTransfer(final String transferFrom, final String transferTo, final long amount, final Context ct) {
+    public void externalTransfer(final String transferFrom, final String transferTo, final long amount, final Context ct) {
         try {
             db.collection("users").document(userRef).collection("accounts").document(transferFrom).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -726,7 +727,7 @@ class BankManager {
     // Methods for managing user settings
     ////////////////////////////////////////////////////////////////////////
     // Method for updating user information
-    void updateInformation(String name, String address, String phone, final Context ct) {
+    public void updateInformation(String name, String address, String phone, final Context ct) {
         Map<String, Object> tmp = new HashMap<>();
         if (name.length()!=0) {
             tmp.put("name", name);

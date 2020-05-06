@@ -56,7 +56,7 @@ public class AccountFragment extends Fragment {
         final CheckBox checkCredit = view.findViewById(R.id.creditCheck);
         final RecyclerView showAccounts = view.findViewById(R.id.showAccounts);
 
-        // Set realtime listener for database
+        // Set realtime listener for database for inflating accounts in recycleview
         db.collection("users").document(bm.getUserRef()).collection("accounts").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {

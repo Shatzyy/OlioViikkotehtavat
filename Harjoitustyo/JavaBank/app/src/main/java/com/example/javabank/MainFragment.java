@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-
+// Shows front page
 public class MainFragment extends Fragment {
     @Nullable
     @Override

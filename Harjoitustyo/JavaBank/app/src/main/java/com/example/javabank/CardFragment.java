@@ -55,6 +55,7 @@ public class CardFragment extends Fragment {
         final Spinner updateAccLink = view.findViewById(R.id.updateAccBankCard);
 
         // Set onClick listeners to buttons
+        // Checks are required input fields filled, transfers input of amount to cents & calls for BankManager method for updating card
         updateCardBtn_accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +86,7 @@ public class CardFragment extends Fragment {
             }
         });
 
+        // Decline clears input fields
         updateCardBtn_decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +96,7 @@ public class CardFragment extends Fragment {
             }
         });
 
+        // Checks is required field filled & calls BankManager method for deleting account
         deleteCardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

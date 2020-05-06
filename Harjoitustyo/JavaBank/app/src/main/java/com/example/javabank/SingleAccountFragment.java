@@ -80,6 +80,8 @@ public class SingleAccountFragment extends Fragment {
                 }
             }
         });
+
+        // Database listener for showing linked bank card
         db.collection("users").document(bm.getUserRef()).collection("cardLinks").document(accNr).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {

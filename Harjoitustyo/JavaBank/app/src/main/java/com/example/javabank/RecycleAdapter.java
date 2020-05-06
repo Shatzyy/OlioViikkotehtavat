@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+
 // This class handles inflating RecycleView for showing Account information
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHolder> {
     private ArrayList<Account> list;

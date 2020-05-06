@@ -9,6 +9,7 @@ import java.util.Random;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+// Class for managing password checks, hashing & salting
 public class PasswordUtils {
 
     private static final Random RANDOM = new SecureRandom();

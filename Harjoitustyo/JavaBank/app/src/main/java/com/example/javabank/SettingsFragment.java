@@ -13,24 +13,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.SetOptions;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class SettingsFragment extends Fragment {
     // Initialize BankManager
     private BankManager bm = BankManager.getInstance();
 
-    // Initialize DB for password checks
+    // Initialize DB
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Nullable
@@ -93,6 +85,7 @@ public class SettingsFragment extends Fragment {
         });
 
         // Set onClick listeners to buttons
+        // Decline clears input fields
         btnDeclineSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +95,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        // Decline clears input fields
         btnDeclinePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +105,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        // Calls for BankManager method for updating settings
         btnAcceptSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +119,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        // Tests does new password match, is it strong enough & validates old password. If all checks are clear, creates new hashed password & new salt into database
         btnAcceptPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

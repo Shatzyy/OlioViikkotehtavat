@@ -66,6 +66,7 @@ public class MyDialog extends AppCompatDialogFragment {
         listener = (MyDialogListener) context;
     }
 
+    // Interface for returning boolean to Login-activity
     public interface MyDialogListener{
         void loadMainActivity(boolean b);
     }
